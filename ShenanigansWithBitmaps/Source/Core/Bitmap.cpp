@@ -152,6 +152,8 @@ void Bitmap::ReadHeader()
 // -----------------------------------------------------------------------------
 void Bitmap::MapImage()
 {
+    // Every row the countDown should be reseted
+
     uint8_t countDown = -1;
 
     for (uint64_t i = m_HeaderOffset; i < m_SizeOfBuff; i++)
