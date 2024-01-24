@@ -50,7 +50,7 @@ void Application::Update()
         ColorHalfOfFile();
         return;
     }
-    if (r == L"colorhalf")
+    if (r == L"color")
     {
         ColorWholeFile();
         return;
@@ -60,6 +60,8 @@ void Application::Update()
         MakeFileNegative();
         return;
     }
+
+    std::wcout << L"Invalid command" << std::endl;
 }
 
 // -----------------------------------------------------------------------------

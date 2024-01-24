@@ -92,15 +92,6 @@ namespace SWBitmaps
 
     };
 
-    // Name of header type     | Size in bytes
-    #define BITMAPCOREHEADER       12
-    #define BITMAPCOREHEADER2      64
-    #define BITMAPINFOHEADER       40      // (Created by Photoshop)
-    #define BITMAPV2INFOHEADER     52
-    #define BITMAPV3INFOHEADER     56      // (Created by Photoshop)
-    #define BITMAPV4HEADER        108
-    #define BITMAPV5HEADER        124
-
     class Bitmap
     {
     public:

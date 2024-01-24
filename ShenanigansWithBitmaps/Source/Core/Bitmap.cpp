@@ -145,7 +145,7 @@ void Bitmap::ReadHeader()
 
 
 
-    m_HeaderOffset = BITMAPV3INFOHEADER; 
+    m_HeaderOffset = 56; 
     m_HeaderOffset++;// And jump over
 }
 
