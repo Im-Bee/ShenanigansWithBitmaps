@@ -101,11 +101,11 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
         {
             GoLeft();
         }
-        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'j')
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'k')
         {
             IncreaseValue();
         }
-        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'k')
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'j')
         {
             DecreaseValue();
         }
