@@ -134,7 +134,7 @@ void SWBytesManipulation::ManipulationSession::PrintBufferRow()
 
     const uint64_t startingIndex = (m_HeightIndx * m_RowWidth);
     std::string tmp;
-    for (uint32_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
+    for (uint64_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
     {
         if (i == startingIndex + m_WidthIndx)
             tmp = " >";
