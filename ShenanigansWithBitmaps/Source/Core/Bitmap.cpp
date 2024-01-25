@@ -29,6 +29,8 @@ void Bitmap::Destroy()
     }
 }
 
+// Image manipulation ----------------------------------------------------------
+
 // -----------------------------------------------------------------------------
 void Bitmap::SaveToFile(IN const std::wstring& path)
 {
@@ -48,18 +50,18 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 }
 
 // -----------------------------------------------------------------------------
-#define FOR_HEIGHT_AND_WIDTH_I_K                            \
+#define FOR_WHOLE_IMAGE_I_K                            \
 for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
 {                                                           \
     for (uint64_t k = 0; k < m_MappedImage.GetWidth(); k++) \
     {
 
-#define FOR_HEIGHT_AND_WIDTH_I_K_END }}
+#define FOR_WHOLE_IMAGE_I_K_END }}
 
 // -----------------------------------------------------------------------------
 void Bitmap::ColorWhole(IN Color c)
 {
-    FOR_HEIGHT_AND_WIDTH_I_K
+    FOR_WHOLE_IMAGE_I_K
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
 
@@ -68,13 +70,13 @@ void Bitmap::ColorWhole(IN Color c)
         p.Red() = c.Red;
         p.Green() = c.Green;
         p.Blue() = c.Blue;
-    FOR_HEIGHT_AND_WIDTH_I_K_END
+    FOR_WHOLE_IMAGE_I_K_END
 }
 
 // -----------------------------------------------------------------------------
 void SWBitmaps::Bitmap::ColorHalf(IN Color c)
 {
-    FOR_HEIGHT_AND_WIDTH_I_K
+    FOR_WHOLE_IMAGE_I_K
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
 
@@ -83,7 +85,7 @@ void SWBitmaps::Bitmap::ColorHalf(IN Color c)
         p.Red() = c.Red;
         p.Green() = c.Green;
         p.Blue() = c.Blue;
-    FOR_HEIGHT_AND_WIDTH_I_K_END
+    FOR_WHOLE_IMAGE_I_K_END
 }
 
 // -----------------------------------------------------------------------------
@@ -94,7 +96,7 @@ void Bitmap::MakeItRainbow()
     srand(time(NULL));
 #pragma warning ( pop )
 
-    FOR_HEIGHT_AND_WIDTH_I_K
+    FOR_WHOLE_IMAGE_I_K
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
         
@@ -103,13 +105,13 @@ void Bitmap::MakeItRainbow()
         p.Red() = std::rand() % 256;
         p.Green() = std::rand() % 256;
         p.Blue() = std::rand() % 256;
-    FOR_HEIGHT_AND_WIDTH_I_K_END
+    FOR_WHOLE_IMAGE_I_K_END
 }
 
 // -----------------------------------------------------------------------------
 void Bitmap::MakeItNegative()
 {
-    FOR_HEIGHT_AND_WIDTH_I_K
+    FOR_WHOLE_IMAGE_I_K
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
         
@@ -118,7 +120,7 @@ void Bitmap::MakeItNegative()
         p.Red() = std::rand() % 256;
         p.Green() = std::rand() % 256;
         p.Blue() = std::rand() % 256;
-    FOR_HEIGHT_AND_WIDTH_I_K_END
+    FOR_WHOLE_IMAGE_I_K_END
 }
 
 // Private ---------------------------------------------------------------------
