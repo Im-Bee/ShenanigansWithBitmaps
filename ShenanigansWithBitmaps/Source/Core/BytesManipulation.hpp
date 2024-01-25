@@ -17,6 +17,8 @@ namespace SWBytesManipulation
 
         void Start();
 
+        void DrawOutput();
+
         void Stop();
 
     public:
@@ -29,7 +31,7 @@ namespace SWBytesManipulation
 
         // Setters -------------------------------------------------------------
         
-        void SetBuffer(char* target, uint64_t targetSize);
+        void SetBuffer(char* target, const uint64_t& targetSize);
 
     private:
 
@@ -43,6 +45,14 @@ namespace SWBytesManipulation
 
         void PrintBufferRow();
 
+        void IncreaseHeight();
+
+        void DecreaseHeight();
+
+        void GoRight();
+
+        void GoLeft();
+
     private:
 
         std::atomic_bool m_UserControlThreadSwitch = false;
@@ -50,6 +60,10 @@ namespace SWBytesManipulation
 
         uint64_t m_TargetBufferSize = 0;
         char* m_TargetBuffer = nullptr;
+
+        uint32_t m_WidthIndx = 0;
+        const uint32_t m_RowWidth = 16;
+        uint32_t m_HeightIndx = 0;
 
     };
 }

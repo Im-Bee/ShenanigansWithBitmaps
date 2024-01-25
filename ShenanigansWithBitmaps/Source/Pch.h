@@ -7,6 +7,9 @@
 #include <fstream>
 #include <thread>
 #include <atomic>
+#include <iomanip>
+#include <sstream>
+#include <format>
 
 #ifdef _WIN32
     #include <Windows.h>

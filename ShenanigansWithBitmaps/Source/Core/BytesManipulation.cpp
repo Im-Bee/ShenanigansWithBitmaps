@@ -8,6 +8,16 @@ void SWBytesManipulation::ManipulationSession::Start()
     StartUserControls();
 }
 
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::DrawOutput()
+{
+    using namespace std::chrono_literals;
+
+    std::this_thread::sleep_for(11ms);
+    ClearScreen();
+    PrintBufferRow();
+}
+
 void SWBytesManipulation::ManipulationSession::Stop()
 {
     StopUserControls();
@@ -16,7 +26,7 @@ void SWBytesManipulation::ManipulationSession::Stop()
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::SetBuffer(char* target, uint64_t targetSize)
+void SWBytesManipulation::ManipulationSession::SetBuffer(char* target, const uint64_t& targetSize)
 {
     if (m_UserControlThreadSwitch.load())
         return;
@@ -63,8 +73,6 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
         using namespace std::chrono_literals;
 
         std::this_thread::sleep_for(11ms);
-        ClearScreen();
-        PrintBufferRow();
 
         ReadConsoleInput(console, &iRec, 1, &numberOfEvents);
 
@@ -78,6 +86,23 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
         {
             m_UserControlThreadSwitch.store(false);
             return;
+        }
+
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'w')
+        {
+            IncreaseHeight();
+        }        
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 's')
+        {
+            DecreaseHeight();
+        }
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'd')
+        {
+            GoRight();
+        }
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'a')
+        {
+            GoLeft();
         }
     }
 }
@@ -97,4 +122,84 @@ void SWBytesManipulation::ManipulationSession::ClearScreen()
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::ManipulationSession::PrintBufferRow()
 {
+    std::string image;
+    image += "Index " + std::to_string(m_HeightIndx);
+    image += " | ";
+
+    const uint32_t startingIndex = (m_HeightIndx * m_RowWidth);
+    std::string tmp;
+    for (uint32_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
+    {
+        if (i == startingIndex + m_WidthIndx)
+            tmp = ">";
+        else
+            tmp = "";
+
+
+
+        tmp += std::format("{:x}", (uint8_t)m_TargetBuffer[i]);
+        
+        std::for_each(tmp.begin(), tmp.end(), [](char& c) {
+            c = std::toupper(c);
+            });
+
+
+
+        if (i == startingIndex + m_WidthIndx)
+            tmp += "< ";
+        else
+            tmp += " ";
+
+        image += tmp;
+    }
+
+    std::cout << image;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::IncreaseHeight()
+{
+    if (m_HeightIndx == 0)
+    {
+        m_HeightIndx = m_TargetBufferSize / m_RowWidth;
+        return;
+    }
+
+    m_HeightIndx--;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::DecreaseHeight()
+{
+    if ((m_HeightIndx + 1) * m_RowWidth >= m_TargetBufferSize)
+    {
+        m_HeightIndx = 0;
+        return;
+    }
+
+    m_HeightIndx++;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::GoRight()
+{
+    if ((m_WidthIndx + 1) >= m_RowWidth)
+    {
+        m_WidthIndx = 0;
+        return;
+    }
+
+    m_WidthIndx++;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::GoLeft()
+{
+    if (m_WidthIndx == 0)
+    {
+        m_WidthIndx = m_RowWidth;
+        return;
+    }
+
+    m_WidthIndx--;
 }

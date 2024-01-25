@@ -198,6 +198,10 @@ namespace SWBitmaps
 
         void SaveToFile(IN const std::wstring& path);
 
+        char* _RawPtr() { return m_ImageBuff; }
+
+        const uint64_t& _RawSize() { return m_SizeOfBuff; }
+
     public:
 
         // Image manipulation ----------------------------------------------------------

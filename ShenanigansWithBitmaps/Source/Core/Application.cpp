@@ -28,8 +28,8 @@ void Application::Update()
     std::wstring r = SWInputOutput::InputString(L"... : ", true);
 
     // Normalize
-    std::for_each(r.begin(), r.end(), [](wchar_t c) {
-        return std::tolower(c);
+    std::for_each(r.begin(), r.end(), [](wchar_t& c) {
+        c = std::tolower(c);
         });
 
     if (r == L"q")
@@ -121,14 +121,15 @@ void Application::LookAtFile()
 {
     auto session = SWBytesManipulation::ManipulationSession();
 
+    session.SetBuffer(m_LoadedBitmap->_RawPtr(), m_LoadedBitmap->_RawSize());
     session.Start();
-
+    
     while (session.IsSessionAlive())
     {
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(100ms);
+        session.DrawOutput();
     }
 
+    std::wcout << std::endl;
     std::wcout << L"Availble commands\n\
         - [q] for quit\n\
         - [load] to load a file from path\n\
