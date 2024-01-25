@@ -125,37 +125,50 @@ void SWBytesManipulation::ManipulationSession::ClearScreen()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::PrintBufferRow()
+std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint64_t& i)
 {
-    std::string image;
-    image += "\n\n\n\n\n\n\n\n\n\n\n\n\n";
-    image += "Index " + std::to_string(m_HeightIndx);
-    image += " | ";
+    // Outside of buffer scope
+    if (i < 0 || i >= m_TargetBufferSize)
+        return "";
 
-    const uint64_t startingIndex = (m_HeightIndx * m_RowWidth);
+    bool isSelected;
+    if (i == m_HeightIndx)
+        isSelected = true;
+    else
+        isSelected = false;
+    
+    std::string result;
+    result += "Index " + std::format("{:6d}", std::to_string(i);
+    result += " | ";
+
+    const uint64_t startingIndex = (i * m_RowWidth);
     std::string tmp;
     for (uint64_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
     {
-        if (i == startingIndex + m_WidthIndx)
+        if (isSelected &&
+            i == startingIndex + m_WidthIndx)
             tmp = " >";
         else
             tmp = " ";
 
         tmp += std::format("{:2x}", (uint8_t)m_TargetBuffer[i]);
         
-        if (i == startingIndex + m_WidthIndx)
+        if (isSelected && 
+            i == startingIndex + m_WidthIndx)
             tmp += "< ";
         else
             tmp += " ";
 
-        image += tmp;
+        result += tmp;
     }
 
-    std::for_each(image.begin(), image.end(), [](char& c) {
+    std::for_each(result.begin(), result.end(), [](char& c) {
         c = std::toupper(c);
         });
 
-    std::cout << image;
+    result += "\n";
+
+    return result;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,9 +176,32 @@ void SWBytesManipulation::ManipulationSession::DrawOutput()
 {
     using namespace std::chrono_literals;
 
+    std::string output = {};
+    const uint8_t offsetUpAndDown = 14;
+    uint64_t upIndex;
+    uint64_t downIndex = (m_HeightIndx + offsetUpAndDown);
+
+    // Hacky way around
+    if (m_HeightIndx < offsetUpAndDown)
+    {
+        upIndex = 0;
+        downIndex += offsetUpAndDown;
+    }
+    else 
+    {
+        upIndex = m_HeightIndx - offsetUpAndDown;
+    }
+
+    for (uint64_t& i = upIndex;
+        i < downIndex;
+        i++)
+    { 
+        output += PrintBufferRow(i);
+    }
+    
+    std::cout << output;
     std::this_thread::sleep_for(11ms);
     ClearScreen();
-    PrintBufferRow();
 }
 
 // -----------------------------------------------------------------------------

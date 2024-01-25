@@ -43,7 +43,7 @@ namespace SWBytesManipulation
 
         void ClearScreen();
 
-        void PrintBufferRow();
+        std::string PrintBufferRow(const uint64_t& i);
 
         void DrawOutput();
 
