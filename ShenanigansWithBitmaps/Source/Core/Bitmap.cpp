@@ -29,8 +29,6 @@ void Bitmap::Destroy()
     }
 }
 
-// Image manipulation ----------------------------------------------------------
-
 // -----------------------------------------------------------------------------
 void Bitmap::SaveToFile(IN const std::wstring& path)
 {
@@ -49,8 +47,10 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
     file.close();
 }
 
+// Image manipulation ----------------------------------------------------------
+
 // -----------------------------------------------------------------------------
-#define FOR_WHOLE_IMAGE_I_K                            \
+#define FOR_WHOLE_IMAGE_I_K                                 \
 for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
 {                                                           \
     for (uint64_t k = 0; k < m_MappedImage.GetWidth(); k++) \
@@ -170,9 +170,9 @@ void Bitmap::ReadHeader()
 // -----------------------------------------------------------------------------
 void Bitmap::MapImage()
 {
-    // Every row the countDown should be reseted
-
-    uint8_t countDown = -1;
+    // Every row the countDown should be reseted to countDownNullVal
+    const uint8_t countDownNullVal = -1;
+    uint8_t countDown = countDownNullVal;
 
     for (uint64_t i = m_HeaderOffset; i < m_SizeOfBuff; i++)
     {
