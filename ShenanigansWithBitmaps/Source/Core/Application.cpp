@@ -126,10 +126,14 @@ void Application::LookAtFile()
     
     while (session.IsSessionAlive())
     {
-        session.DrawOutput();
+        session.UpdateSession();
     }
 
-    std::wcout << std::endl;
+    // Super secret windows exclusive feature
+#ifdef _WIN32
+    system("cls");
+#endif // _WIN32
+
     std::wcout << L"Availble commands\n\
         - [q] for quit\n\
         - [load] to load a file from path\n\

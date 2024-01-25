@@ -9,15 +9,12 @@ void SWBytesManipulation::ManipulationSession::Start()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::DrawOutput()
+void SWBytesManipulation::ManipulationSession::UpdateSession()
 {
-    using namespace std::chrono_literals;
-
-    std::this_thread::sleep_for(11ms);
-    ClearScreen();
-    PrintBufferRow();
+    DrawOutput();
 }
 
+// -----------------------------------------------------------------------------
 void SWBytesManipulation::ManipulationSession::Stop()
 {
     StopUserControls();
@@ -131,6 +128,7 @@ void SWBytesManipulation::ManipulationSession::ClearScreen()
 void SWBytesManipulation::ManipulationSession::PrintBufferRow()
 {
     std::string image;
+    image += "\n\n\n\n\n\n\n\n\n\n\n\n\n";
     image += "Index " + std::to_string(m_HeightIndx);
     image += " | ";
 
@@ -139,20 +137,12 @@ void SWBytesManipulation::ManipulationSession::PrintBufferRow()
     for (uint32_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
     {
         if (i == startingIndex + m_WidthIndx)
-            tmp = ">";
+            tmp = " >";
         else
-            tmp = "";
+            tmp = " ";
 
-
-
-        tmp += std::format("{:x}", (uint8_t)m_TargetBuffer[i]);
+        tmp += std::format("{:2x}", (uint8_t)m_TargetBuffer[i]);
         
-        std::for_each(tmp.begin(), tmp.end(), [](char& c) {
-            c = std::toupper(c);
-            });
-
-
-
         if (i == startingIndex + m_WidthIndx)
             tmp += "< ";
         else
@@ -161,7 +151,21 @@ void SWBytesManipulation::ManipulationSession::PrintBufferRow()
         image += tmp;
     }
 
+    std::for_each(image.begin(), image.end(), [](char& c) {
+        c = std::toupper(c);
+        });
+
     std::cout << image;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::DrawOutput()
+{
+    using namespace std::chrono_literals;
+
+    std::this_thread::sleep_for(11ms);
+    ClearScreen();
+    PrintBufferRow();
 }
 
 // -----------------------------------------------------------------------------

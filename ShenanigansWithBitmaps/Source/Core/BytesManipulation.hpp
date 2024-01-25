@@ -16,8 +16,8 @@ namespace SWBytesManipulation
     public:
 
         void Start();
-
-        void DrawOutput();
+        
+        void UpdateSession();
 
         void Stop();
 
@@ -25,7 +25,7 @@ namespace SWBytesManipulation
 
         // Getters -------------------------------------------------------------
 
-        const bool& IsSessionAlive() { return m_UserControlThreadSwitch.load(); }
+        bool IsSessionAlive() { return m_UserControlThreadSwitch.load(); }
 
     public:
 
@@ -44,6 +44,8 @@ namespace SWBytesManipulation
         void ClearScreen();
 
         void PrintBufferRow();
+
+        void DrawOutput();
 
         void IncreaseHeight();
 
@@ -65,9 +67,9 @@ namespace SWBytesManipulation
         uint64_t m_TargetBufferSize = 0;
         char* m_TargetBuffer = nullptr;
 
-        uint32_t m_WidthIndx = 0;
-        const uint32_t m_RowWidth = 16;
-        uint32_t m_HeightIndx = 0;
+        uint64_t m_WidthIndx = 0;
+        const uint64_t m_RowWidth = 16;
+        uint64_t m_HeightIndx = 0;
 
     };
 }
