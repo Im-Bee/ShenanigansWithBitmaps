@@ -2,6 +2,12 @@
 
 namespace SWBytesManipulation
 {
+    enum DisplayMode
+    {
+        Hex,
+        Dec
+    };
+
     class ManipulationSession
     {
     public:
@@ -70,6 +76,8 @@ namespace SWBytesManipulation
         uint64_t m_WidthIndx = 0;
         const uint64_t m_RowWidth = 16;
         uint64_t m_HeightIndx = 0;
+
+        DisplayMode m_DisplayMode = Hex;
 
     };
 }

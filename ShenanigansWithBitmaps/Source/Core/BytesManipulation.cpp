@@ -67,10 +67,6 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
 
     while (m_UserControlThreadSwitch.load())
     {
-        using namespace std::chrono_literals;
-
-        std::this_thread::sleep_for(11ms);
-
         ReadConsoleInput(console, &iRec, 1, &numberOfEvents);
 
         if (iRec.EventType != KEY_EVENT
@@ -109,6 +105,13 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
         {
             DecreaseValue();
         }
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'o')
+        {
+            if (!m_DisplayMode)
+                m_DisplayMode = Dec;
+            else
+                m_DisplayMode = Hex;
+        }
     }
 }
 
@@ -127,8 +130,10 @@ void SWBytesManipulation::ManipulationSession::ClearScreen()
 // -----------------------------------------------------------------------------
 std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint64_t& i)
 {
+    const uint64_t startingIndex = (i * m_RowWidth);
+
     // Outside of buffer scope
-    if (i < 0 || i >= m_TargetBufferSize)
+    if (i < 0 || startingIndex >= m_TargetBufferSize)
         return "";
 
     bool isSelected;
@@ -142,11 +147,10 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
     result += std::format("{:6d}", i);
     result += " | ";
     if (isSelected)
-        result += "---";
+        result += "---  ";
     else
         result += "    ";
 
-    const uint64_t startingIndex = (i * m_RowWidth);
     std::string tmp;
     for (uint64_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
     {
@@ -156,8 +160,11 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
         else
             tmp = " ";
 
-        tmp += std::format("{:2x}", (uint8_t)m_TargetBuffer[i]);
-        
+        if (m_DisplayMode == Hex)
+            tmp += std::format("{:2x}", (uint8_t)m_TargetBuffer[i]);
+        else if (m_DisplayMode == Dec)
+            tmp += std::format("{:3d}", (uint8_t)m_TargetBuffer[i]);
+
         if (isSelected && 
             i == startingIndex + m_WidthIndx)
             tmp += "< ";
@@ -174,7 +181,10 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
     if (isSelected)
         result += "---";
     else
+    {
         result += "    ";
+        result += "  ";
+    }
 
     result += " | ";
     result += "\n";
@@ -256,7 +266,7 @@ void SWBytesManipulation::ManipulationSession::GoLeft()
 {
     if (m_WidthIndx == 0)
     {
-        m_WidthIndx = m_RowWidth;
+        m_WidthIndx = m_RowWidth - 1;
         return;
     }
 

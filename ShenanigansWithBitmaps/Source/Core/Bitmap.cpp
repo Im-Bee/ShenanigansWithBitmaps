@@ -117,9 +117,9 @@ void Bitmap::MakeItNegative()
         
         auto& p = m_MappedImage.Pixel(i, k);
         
-        p.Red() = std::rand() % 256;
-        p.Green() = std::rand() % 256;
-        p.Blue() = std::rand() % 256;
+        p.Red() = 256 - p.Red();
+        p.Green() = 256 - p.Green();
+        p.Blue() = 256 - p.Blue();
     FOR_WHOLE_IMAGE_I_K_END
 }
 
