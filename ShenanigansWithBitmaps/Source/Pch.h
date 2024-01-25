@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <vector>
 #include <fstream>
+#include <thread>
+#include <atomic>
 
 #ifdef _WIN32
     #include <Windows.h>

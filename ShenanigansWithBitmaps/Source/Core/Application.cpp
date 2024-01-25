@@ -3,6 +3,7 @@
 #include "Application.hpp"
 #include "UserInputOutput/Output.hpp"
 #include "UserInputOutput/Input.hpp"
+#include "BytesManipulation.hpp"
 
 // -----------------------------------------------------------------------------
 void Application::Initialize()
@@ -14,6 +15,7 @@ void Application::Initialize()
         - [save] to save file in output dir\n\
         - [colorhalf] to color half\n\
         - [color] to color whole\n\
+        - [lookat] to view file as dec \n\
         - [negative] to make file negative\n";
 
     FindPathToItself();
@@ -43,6 +45,11 @@ void Application::Update()
     if (r == L"save")
     {
         SaveFile();
+        return;
+    }
+    if (r == L"lookat")
+    {
+        LookAtFile();
         return;
     }
     if (r == L"colorhalf")
@@ -112,6 +119,24 @@ void Application::SaveFile()
 // -----------------------------------------------------------------------------
 void Application::LookAtFile()
 {
+    auto session = SWBytesManipulation::ManipulationSession();
+
+    session.Start();
+
+    while (session.IsSessionAlive())
+    {
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(100ms);
+    }
+
+    std::wcout << L"Availble commands\n\
+        - [q] for quit\n\
+        - [load] to load a file from path\n\
+        - [save] to save file in output dir\n\
+        - [colorhalf] to color half\n\
+        - [color] to color whole\n\
+        - [lookat] to view file as dec \n\
+        - [negative] to make file negative\n";
 }
 
 // -----------------------------------------------------------------------------
