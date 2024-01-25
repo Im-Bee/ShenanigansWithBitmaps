@@ -53,6 +53,10 @@ namespace SWBytesManipulation
 
         void GoLeft();
 
+        void IncreaseValue();
+
+        void DecreaseValue();
+
     private:
 
         std::atomic_bool m_UserControlThreadSwitch = false;

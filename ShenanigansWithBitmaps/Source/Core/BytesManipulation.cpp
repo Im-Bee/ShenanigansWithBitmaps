@@ -104,6 +104,14 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
         {
             GoLeft();
         }
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'j')
+        {
+            IncreaseValue();
+        }
+        if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'k')
+        {
+            DecreaseValue();
+        }
     }
 }
 
@@ -202,4 +210,16 @@ void SWBytesManipulation::ManipulationSession::GoLeft()
     }
 
     m_WidthIndx--;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::IncreaseValue()
+{
+    m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]++;
+}
+
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::ManipulationSession::DecreaseValue()
+{
+    m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]--;
 }
