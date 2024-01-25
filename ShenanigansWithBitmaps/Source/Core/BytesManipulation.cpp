@@ -138,8 +138,13 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
         isSelected = false;
     
     std::string result;
-    result += "Index " + std::format("{:6d}", std::to_string(i);
+    result += "Index ";
+    result += std::format("{:6d}", i);
     result += " | ";
+    if (isSelected)
+        result += "---";
+    else
+        result += "    ";
 
     const uint64_t startingIndex = (i * m_RowWidth);
     std::string tmp;
@@ -166,6 +171,12 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
         c = std::toupper(c);
         });
 
+    if (isSelected)
+        result += "---";
+    else
+        result += "    ";
+
+    result += " | ";
     result += "\n";
 
     return result;
@@ -185,7 +196,7 @@ void SWBytesManipulation::ManipulationSession::DrawOutput()
     if (m_HeightIndx < offsetUpAndDown)
     {
         upIndex = 0;
-        downIndex += offsetUpAndDown;
+        downIndex += offsetUpAndDown - m_HeightIndx;
     }
     else 
     {
