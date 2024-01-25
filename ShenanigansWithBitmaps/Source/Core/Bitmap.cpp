@@ -20,7 +20,7 @@ void Bitmap::Initialize(IN const std::wstring& path)
 // -----------------------------------------------------------------------------
 void Bitmap::Destroy()
 {
-    m_MappedImage.clear();
+    m_MappedImage.Clear();
 
     if (m_ImageBuff != nullptr)
     {
@@ -48,31 +48,42 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 }
 
 // -----------------------------------------------------------------------------
+#define FOR_HEIGHT_AND_WIDTH_I_K                            \
+for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
+{                                                           \
+    for (uint64_t k = 0; k < m_MappedImage.GetWidth(); k++) \
+    {
+
+#define FOR_HEIGHT_AND_WIDTH_I_K_END }}
+
+// -----------------------------------------------------------------------------
 void Bitmap::ColorWhole(IN Color c)
 {
-    for (uint64_t i = 0; i < m_MappedImage.size(); i++)
-    {
-        if (MappedPixel::IsInvalid(m_MappedImage[i]))
+    FOR_HEIGHT_AND_WIDTH_I_K
+        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
 
-        m_MappedImage[i].Red() = c.Red;
-        m_MappedImage[i].Green() = c.Green;
-        m_MappedImage[i].Blue() = c.Blue;
-    }
+        auto& p = m_MappedImage.Pixel(i, k);
+
+        p.Red() = c.Red;
+        p.Green() = c.Green;
+        p.Blue() = c.Blue;
+    FOR_HEIGHT_AND_WIDTH_I_K_END
 }
 
 // -----------------------------------------------------------------------------
 void SWBitmaps::Bitmap::ColorHalf(IN Color c)
 {
-    for (uint64_t i = 0; i < m_MappedImage.size() / 2; i++)
-    {
-        if (MappedPixel::IsInvalid(m_MappedImage[i]))
+    FOR_HEIGHT_AND_WIDTH_I_K
+        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
 
-        m_MappedImage[i].Red() = c.Red;
-        m_MappedImage[i].Green() = c.Green;
-        m_MappedImage[i].Blue() = c.Blue;
-    }
+        auto& p = m_MappedImage.Pixel(i, k);
+
+        p.Red() = c.Red;
+        p.Green() = c.Green;
+        p.Blue() = c.Blue;
+    FOR_HEIGHT_AND_WIDTH_I_K_END
 }
 
 // -----------------------------------------------------------------------------
@@ -82,27 +93,32 @@ void Bitmap::MakeItRainbow()
 #pragma warning ( disable : 4244 )
     srand(time(NULL));
 #pragma warning ( pop )
-    for (uint64_t i = BITMAP_CHUNK; i < m_SizeOfBuff - BITMAP_CHUNK; i++)
-    {
-        if (MappedPixel::IsInvalid(m_MappedImage[i]))
-            continue;
 
-        m_ImageBuff[i] = std::rand() % 256;
-    }
+    FOR_HEIGHT_AND_WIDTH_I_K
+        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
+            continue;
+        
+        auto& p = m_MappedImage.Pixel(i, k);
+        
+        p.Red() = std::rand() % 256;
+        p.Green() = std::rand() % 256;
+        p.Blue() = std::rand() % 256;
+    FOR_HEIGHT_AND_WIDTH_I_K_END
 }
 
 // -----------------------------------------------------------------------------
 void Bitmap::MakeItNegative()
 {
-    for (uint64_t i = 0; i < m_MappedImage.size(); i++)
-    {
-        if (MappedPixel::IsInvalid(m_MappedImage[i]))
+    FOR_HEIGHT_AND_WIDTH_I_K
+        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
-
-        m_MappedImage[i].Red() = 255 - m_MappedImage[i].Red();
-        m_MappedImage[i].Blue() = 255 - m_MappedImage[i].Blue();
-        m_MappedImage[i].Green() = 255 - m_MappedImage[i].Green();
-    }
+        
+        auto& p = m_MappedImage.Pixel(i, k);
+        
+        p.Red() = std::rand() % 256;
+        p.Green() = std::rand() % 256;
+        p.Blue() = std::rand() % 256;
+    FOR_HEIGHT_AND_WIDTH_I_K_END
 }
 
 // Private ---------------------------------------------------------------------
@@ -161,7 +177,7 @@ void Bitmap::MapImage()
         if (countDown >= 3)
         {
             countDown = 0;
-            m_MappedImage.push_back(MappedPixel());
+            m_MappedImage.PushBackPixel();
         }
 
         // The order of colors is BGR not RGB
@@ -169,15 +185,15 @@ void Bitmap::MapImage()
         switch (countDown)
         {
         case 0:
-            m_MappedImage.back().SetBlueRef((uint8_t&)m_ImageBuff[i]);
+            m_MappedImage.LastPixel().SetBlueRef((uint8_t&)m_ImageBuff[i]);
             break;
 
         case 1:
-            m_MappedImage.back().SetGreenRef((uint8_t&)m_ImageBuff[i]);
+            m_MappedImage.LastPixel().SetGreenRef((uint8_t&)m_ImageBuff[i]);
             break;
 
         case 2:
-            m_MappedImage.back().SetRedRef((uint8_t&)m_ImageBuff[i]);
+            m_MappedImage.LastPixel().SetRedRef((uint8_t&)m_ImageBuff[i]);
             break;
 
         default:

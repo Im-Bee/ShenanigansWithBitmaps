@@ -38,6 +38,8 @@ namespace SWBitmaps
 
     struct MappedPixel
     {
+    public:
+
         MappedPixel() = default;
 
         MappedPixel(uint8_t* r, uint8_t* g, uint8_t* b) :
@@ -46,13 +48,29 @@ namespace SWBitmaps
             m_Blue(b)
         {};
 
+    public:
+
+        // Getters ---------------------------------------------------------------------
+
         uint8_t& Red() { return *m_Red; }
+
         uint8_t& Green() { return *m_Green; }
+
         uint8_t& Blue() { return *m_Blue; }
 
+    public:
+
+        // Setters -------------------------------------------------------------
+
         void SetRedRef(uint8_t& r) { m_Red = &r; }
+
         void SetGreenRef(uint8_t& g) { m_Green = &g; }
+
         void SetBlueRef(uint8_t& b) { m_Blue = &b; }
+
+    public:
+
+        // Operators -----------------------------------------------------------
 
         static bool IsEmpty(const MappedPixel& mp)
         {
@@ -89,6 +107,73 @@ namespace SWBitmaps
         uint8_t* m_Red = nullptr;
         uint8_t* m_Green = nullptr;
         uint8_t* m_Blue = nullptr;
+
+    };
+
+    struct PixelMapWrapper
+    {
+    public:
+
+        void PushBackRow()
+        {
+            m_Map.push_back({});
+        }
+
+        void PushBackPixel()
+        {
+            if (m_Map.size() == 0)
+                PushBackRow();
+
+            m_Map.back().push_back(MappedPixel());
+        }
+
+        void PushBackPixel(size_t i)
+        {
+            m_Map[i].push_back(MappedPixel());
+        }
+
+        void Clear()
+        {
+            m_Map.clear();
+        }
+
+    public:
+
+        // Getters ---------------------------------------------------------------------
+
+        std::vector<MappedPixel>& Row(size_t row)
+        {
+            return m_Map[row];
+        }
+
+        MappedPixel& LastPixel()
+        {
+            return m_Map.back().back();
+        }
+
+        MappedPixel& Pixel(size_t row, size_t col)
+        {
+            return m_Map[row][col];
+        }
+
+        std::vector<MappedPixel>& operator[](size_t i)
+        {
+            return m_Map[i];
+        }
+
+        size_t GetWidth()
+        {
+            return m_Map.back().size();
+        }
+
+        size_t GetHeight()
+        {
+            return m_Map.size();
+        }
+
+    private:
+
+        std::vector<std::vector<MappedPixel>> m_Map;
 
     };
 
@@ -162,6 +247,6 @@ namespace SWBitmaps
         uint64_t m_SizeOfBuff = 0;
         char* m_ImageBuff = nullptr;
         
-        std::vector<MappedPixel> m_MappedImage;
+        PixelMapWrapper m_MappedImage = {};
     };
 }
