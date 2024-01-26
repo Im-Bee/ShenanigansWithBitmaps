@@ -221,6 +221,7 @@ void SWBytesManipulation::ManipulationSession::DrawOutput()
     }
     
     std::cout << output;
+    std::cout << std::endl << SWBytesManipulation_FOOTER;
     std::this_thread::sleep_for(11ms);
     ClearScreen();
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#define SWBytesManipulation_FOOTER \
+"W - up; S - down; A - left; D - right; j - decrease value; k - increase value; o - change between Hex and Dec mode"
+
 namespace SWBytesManipulation
 {
     enum DisplayMode
