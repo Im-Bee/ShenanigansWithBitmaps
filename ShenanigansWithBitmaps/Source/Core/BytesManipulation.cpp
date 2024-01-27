@@ -3,19 +3,19 @@
 #include "BytesManipulation.hpp"
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::Start()
+void SWBytesManipulation::Session::Start()
 {
     StartUserControls();
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::UpdateSession()
+void SWBytesManipulation::Session::UpdateSession()
 {
     DrawOutput();
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::Stop()
+void SWBytesManipulation::Session::Stop()
 {
     StopUserControls();
 }
@@ -23,7 +23,7 @@ void SWBytesManipulation::ManipulationSession::Stop()
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::SetBuffer(char* target, const uint64_t& targetSize)
+void SWBytesManipulation::Session::SetBuffer(IN char* target, IN const uint64_t& targetSize)
 {
     if (m_UserControlThreadSwitch.load())
         return;
@@ -35,18 +35,18 @@ void SWBytesManipulation::ManipulationSession::SetBuffer(char* target, const uin
 // Private ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::StartUserControls()
+void SWBytesManipulation::Session::StartUserControls()
 {
     if (m_UserControlThreadSwitch.load())
         StopUserControls();
 
     m_UserControlThreadSwitch.store(true);
-    m_UserControlThread = std::thread(&SWBytesManipulation::ManipulationSession::UserControlLoop, 
+    m_UserControlThread = std::thread(&SWBytesManipulation::Session::UserControlLoop, 
         this);
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::StopUserControls()
+void SWBytesManipulation::Session::StopUserControls()
 {
     m_UserControlThreadSwitch.store(false);
     
@@ -55,7 +55,7 @@ void SWBytesManipulation::ManipulationSession::StopUserControls()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::UserControlLoop()
+void SWBytesManipulation::Session::UserControlLoop()
 {
     DWORD numberOfEvents;
     INPUT_RECORD iRec;
@@ -116,7 +116,7 @@ void SWBytesManipulation::ManipulationSession::UserControlLoop()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::ClearScreen()
+void SWBytesManipulation::Session::ClearScreen()
 {
 #ifdef _WIN32
     system("cls");
@@ -128,7 +128,7 @@ void SWBytesManipulation::ManipulationSession::ClearScreen()
 }
 
 // -----------------------------------------------------------------------------
-std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint64_t& i)
+std::string SWBytesManipulation::Session::PrintBufferRow(IN const uint64_t& i)
 {
     const uint64_t startingIndex = (i * m_RowWidth);
 
@@ -193,7 +193,7 @@ std::string SWBytesManipulation::ManipulationSession::PrintBufferRow(const uint6
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::DrawOutput()
+void SWBytesManipulation::Session::DrawOutput()
 {
     using namespace std::chrono_literals;
 
@@ -227,7 +227,7 @@ void SWBytesManipulation::ManipulationSession::DrawOutput()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::IncreaseHeight()
+void SWBytesManipulation::Session::IncreaseHeight()
 {
     if (m_HeightIndx == 0)
     {
@@ -239,7 +239,7 @@ void SWBytesManipulation::ManipulationSession::IncreaseHeight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::DecreaseHeight()
+void SWBytesManipulation::Session::DecreaseHeight()
 {
     if ((m_HeightIndx + 1) * m_RowWidth >= m_TargetBufferSize)
     {
@@ -251,7 +251,7 @@ void SWBytesManipulation::ManipulationSession::DecreaseHeight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::GoRight()
+void SWBytesManipulation::Session::GoRight()
 {
     if ((m_WidthIndx + 1) >= m_RowWidth)
     {
@@ -263,7 +263,7 @@ void SWBytesManipulation::ManipulationSession::GoRight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::GoLeft()
+void SWBytesManipulation::Session::GoLeft()
 {
     if (m_WidthIndx == 0)
     {
@@ -275,13 +275,13 @@ void SWBytesManipulation::ManipulationSession::GoLeft()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::IncreaseValue()
+void SWBytesManipulation::Session::IncreaseValue()
 {
     m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]++;
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::ManipulationSession::DecreaseValue()
+void SWBytesManipulation::Session::DecreaseValue()
 {
     m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]--;
 }

@@ -11,11 +11,11 @@ void Application::Initialize()
     SWInputOutput::OutputPrompt(IDS_STRING_PROMPT_WELCOME);
     std::wcout << L"Availble commands\n\
         - [q] for quit\n\
-        - [load] to load a file from path\n\
-        - [save] to save file in output dir\n\
-        - [colorhalf] to color half\n\
+        - [load / l] to load a file from path\n\
+        - [save / s] to save file in output dir\n\
         - [color] to color whole\n\
         - [lookat] to view file as dec \n\
+        - [gray] to make file gray scale \n\
         - [negative] to make file negative\n";
 
     FindPathToItself();
@@ -23,10 +23,19 @@ void Application::Initialize()
 }
 
 // -----------------------------------------------------------------------------
+#define SW_IS_BITMAP                                        \
+if (!m_pLoadedBitmap.get() ||                               \
+    !m_pLoadedBitmap->IsValid)                              \
+{                                                           \
+    std::cout << "There is no file to save" << std::endl;   \
+    return;                                                 \
+}
+
+// -----------------------------------------------------------------------------
 void Application::Update()
 {
     std::wstring r = SWInputOutput::InputString(L"... : ", true);
-
+    
     // Normalize
     std::for_each(r.begin(), r.end(), [](wchar_t& c) {
         c = std::tolower(c);
@@ -46,27 +55,39 @@ void Application::Update()
     if (r == L"save" ||
         r == L"s")
     {
+        SW_IS_BITMAP;
         SaveFile();
         return;
     }
     if (r == L"lookat")
     {
+        SW_IS_BITMAP;
         LookAtFile();
-        return;
-    }
-    if (r == L"colorhalf")
-    {
-        ColorHalfOfFile();
         return;
     }
     if (r == L"color")
     {
-        ColorWholeFile();
+        SW_IS_BITMAP;
+        m_pLoadedBitmap->ColorWhole({ 250, 170, 15 });
         return;
     }
     if (r == L"negative")
     {
-        MakeFileNegative();
+        SW_IS_BITMAP;
+        m_pLoadedBitmap->MakeItNegative();
+        return;
+    }
+    if (r == L"gray")
+    {
+        SW_IS_BITMAP;
+        m_pLoadedBitmap->MakeItGrayScale();
+        return;
+    }
+
+    if (r == L"ds")
+    {
+        SW_IS_BITMAP;
+        m_pLoadedBitmap->DeleteShadows();
         return;
     }
 
@@ -76,8 +97,8 @@ void Application::Update()
 // -----------------------------------------------------------------------------
 void Application::Destroy()
 {
-    if (m_LoadedBitmap.get())
-        m_LoadedBitmap->Destroy();
+    if (m_pLoadedBitmap.get())
+        m_pLoadedBitmap->Destroy();
 }
 
 // Private ---------------------------------------------------------------------
@@ -85,10 +106,10 @@ void Application::Destroy()
 // -----------------------------------------------------------------------------
 void Application::LoadFile()
 {
-    if (m_LoadedBitmap.get())
-        m_LoadedBitmap->Destroy();
+    if (m_pLoadedBitmap.get())
+        m_pLoadedBitmap->Destroy();
     else
-        m_LoadedBitmap = std::make_shared<SWBitmaps::Bitmap>();
+        m_pLoadedBitmap = std::make_shared<SWBitmaps::Bitmap>();
 
     SWInputOutput::OutputPrompt(IDS_STRING_PROMPT_DOING_BITMAP);
     std::wstring p = SWInputOutput::InputString(L"Set path to target bitmap:");
@@ -100,35 +121,29 @@ void Application::LoadFile()
         p.erase(at, at + 1);
     }
 
-    m_LoadedBitmap->Initialize(p);
+    m_pLoadedBitmap->Initialize(p);
 }   
 
 // -----------------------------------------------------------------------------
 void Application::SaveFile()
 {
-    if (!m_LoadedBitmap.get())
-    {
-        std::cout << "There is no file to save" << std::endl;
-        return;
-    }
-
-    m_LoadedBitmap->SaveToFile(SAVE_DIR 
+    m_pLoadedBitmap->SaveToFile(SAVE_DIR 
         + L"Output" 
-        + std::to_wstring(m_BitmapCounter++) 
+        + std::to_wstring(m_uBitmapCounter++) 
         + L".bmp");
 }
 
 // -----------------------------------------------------------------------------
 void Application::LookAtFile()
 {
-    auto session = SWBytesManipulation::ManipulationSession();
+    auto s = SWBytesManipulation::Session();
 
-    session.SetBuffer(m_LoadedBitmap->_RawPtr(), m_LoadedBitmap->_RawSize());
-    session.Start();
+    s.SetBuffer(m_pLoadedBitmap->_RawPtr(), m_pLoadedBitmap->_RawSize());
+    s.Start();
     
-    while (session.IsSessionAlive())
+    while (s.IsSessionAlive())
     {
-        session.UpdateSession();
+        s.UpdateSession();
     }
 
     // Super secret windows exclusive feature
@@ -144,42 +159,6 @@ void Application::LookAtFile()
         - [color] to color whole\n\
         - [lookat] to view file as dec \n\
         - [negative] to make file negative\n";
-}
-
-// -----------------------------------------------------------------------------
-void Application::ColorHalfOfFile()
-{
-    if (!m_LoadedBitmap.get())
-    {
-        std::cout << "There is no file" << std::endl;
-        return;
-    }
-
-    m_LoadedBitmap->ColorHalf({250, 170, 15});
-}
-
-// -----------------------------------------------------------------------------
-void Application::ColorWholeFile()
-{
-    if (!m_LoadedBitmap.get())
-    {
-        std::cout << "There is no file" << std::endl;
-        return;
-    }
-
-    m_LoadedBitmap->ColorWhole({ 250, 170, 15 });
-}
-
-// -----------------------------------------------------------------------------
-void Application::MakeFileNegative()
-{
-    if (!m_LoadedBitmap.get())
-    {
-        std::cout << "There is no file" << std::endl;
-        return;
-    }
-
-    m_LoadedBitmap->MakeItNegative();
 }
 
 // -----------------------------------------------------------------------------

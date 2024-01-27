@@ -11,13 +11,13 @@ namespace SWBytesManipulation
         Dec
     };
 
-    class ManipulationSession
+    class Session
     {
     public:
 
-        ManipulationSession() = default;
+        Session() = default;
 
-        ~ManipulationSession()
+        ~Session()
         {
             StopUserControls();
         }
@@ -40,7 +40,7 @@ namespace SWBytesManipulation
 
         // Setters -------------------------------------------------------------
         
-        void SetBuffer(char* target, const uint64_t& targetSize);
+        void SetBuffer(IN char* target, IN const uint64_t& targetSize);
 
     private:
 
@@ -52,7 +52,7 @@ namespace SWBytesManipulation
 
         void ClearScreen();
 
-        std::string PrintBufferRow(const uint64_t& i);
+        std::string PrintBufferRow(IN const uint64_t& i);
 
         void DrawOutput();
 

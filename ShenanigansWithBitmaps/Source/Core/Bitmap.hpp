@@ -42,61 +42,61 @@ namespace SWBitmaps
 
         MappedPixel() = default;
 
-        MappedPixel(uint8_t* r, uint8_t* g, uint8_t* b) :
-            m_Red(r),
-            m_Green(g),
-            m_Blue(b)
+        MappedPixel(IN uint8_t* r, IN uint8_t* g, IN uint8_t* b) :
+            m_pRed(r),
+            m_pGreen(g),
+            m_pBlue(b)
         {};
 
     public:
 
         // Getters -------------------------------------------------------------
 
-        uint8_t& Red() { return *m_Red; }
+        uint8_t& Red() { return *m_pRed; }
 
-        uint8_t& Green() { return *m_Green; }
+        uint8_t& Green() { return *m_pGreen; }
 
-        uint8_t& Blue() { return *m_Blue; }
+        uint8_t& Blue() { return *m_pBlue; }
 
     public:
 
         // Setters -------------------------------------------------------------
 
-        void SetRedRef(uint8_t& r) { m_Red = &r; }
+        void SetRedRef(IN uint8_t& r) { m_pRed = &r; }
 
-        void SetGreenRef(uint8_t& g) { m_Green = &g; }
+        void SetGreenRef(IN uint8_t& g) { m_pGreen = &g; }
 
-        void SetBlueRef(uint8_t& b) { m_Blue = &b; }
+        void SetBlueRef(IN uint8_t& b) { m_pBlue = &b; }
 
     public:
 
         // Operators -----------------------------------------------------------
 
-        static bool IsEmpty(const MappedPixel& mp)
+        static bool IsEmpty(IN const MappedPixel& mp)
         {
-            if (mp.m_Red == nullptr &&
-                mp.m_Green == nullptr &&
-                mp.m_Blue == nullptr)
+            if (mp.m_pRed == nullptr &&
+                mp.m_pGreen == nullptr &&
+                mp.m_pBlue == nullptr)
                 return true;
 
             return false;
         }
 
-        static bool IsInvalid(const MappedPixel& mp)
+        static bool IsInvalid(IN const MappedPixel& mp)
         {
-            if (mp.m_Red == nullptr ||
-                mp.m_Green == nullptr ||
-                mp.m_Blue == nullptr)
+            if (mp.m_pRed == nullptr ||
+                mp.m_pGreen == nullptr ||
+                mp.m_pBlue == nullptr)
                 return true;
 
             return false;
         }
 
-        bool operator==(const MappedPixel& right)
+        bool operator==(IN const MappedPixel& right)
         {
-            if (m_Red == right.m_Red &&
-                m_Green == right.m_Green &&
-                m_Blue == right.m_Blue)
+            if (m_pRed == right.m_pRed &&
+                m_pGreen == right.m_pGreen &&
+                m_pBlue == right.m_pBlue)
                 return true;
 
             return false;
@@ -104,11 +104,16 @@ namespace SWBitmaps
 
     private:
 
-        uint8_t* m_Red = nullptr;
-        uint8_t* m_Green = nullptr;
-        uint8_t* m_Blue = nullptr;
+        uint8_t* m_pRed = nullptr;
+        uint8_t* m_pGreen = nullptr;
+        uint8_t* m_pBlue = nullptr;
 
     };
+
+    // -----------------------------------------------------------------------------
+    #define SW_THROW_IF_I_OUT_OF_SCOPE(i)   \
+    if (i >= m_Map.size())                  \
+        throw;
 
     struct PixelMapWrapper
     {
@@ -127,8 +132,10 @@ namespace SWBitmaps
             m_Map.back().push_back(MappedPixel());
         }
 
-        void PushBackPixel(size_t i)
+        void PushBackPixel(IN const size_t& i)
         {
+            SW_THROW_IF_I_OUT_OF_SCOPE(i);
+
             m_Map[i].push_back(MappedPixel());
         }
 
@@ -141,9 +148,11 @@ namespace SWBitmaps
 
         // Getters ---------------------------------------------------------------------
 
-        std::vector<MappedPixel>& Row(size_t row)
+        std::vector<MappedPixel>& Row(IN const size_t& i)
         {
-            return m_Map[row];
+            SW_THROW_IF_I_OUT_OF_SCOPE(i);
+
+            return m_Map[i];
         }
 
         MappedPixel& LastPixel()
@@ -151,22 +160,26 @@ namespace SWBitmaps
             return m_Map.back().back();
         }
 
-        MappedPixel& Pixel(size_t row, size_t col)
+        MappedPixel& Pixel(IN const size_t& row, IN const size_t& col)
         {
-            if (row >= m_Map.size() ||
-                col >= m_Map[row].size())
+            SW_THROW_IF_I_OUT_OF_SCOPE(row);
+            if (col >= m_Map[row].size())
                 throw;
 
             return m_Map[row][col];
         }
 
-        std::vector<MappedPixel>& operator[](size_t i)
+        std::vector<MappedPixel>& operator[](IN const size_t& i)
         {
+            SW_THROW_IF_I_OUT_OF_SCOPE(i);
+
             return m_Map[i];
         }
 
-        size_t GetWidth(size_t& i)
+        size_t GetWidth(IN const size_t& i)
         {
+            SW_THROW_IF_I_OUT_OF_SCOPE(i);
+
             return m_Map[i].size();
         }
 
@@ -181,6 +194,10 @@ namespace SWBitmaps
 
     };
     
+#pragma region Headers types 
+    #define BITMAPINFOHEADER (14 + 40)
+#pragma endregion
+
     struct BitmapHeader
     {
         bool Valid = false;
@@ -222,7 +239,7 @@ namespace SWBitmaps
 
         char* _RawPtr() { return m_ImageBuff; }
 
-        const uint64_t& _RawSize() { return m_SizeOfBuff; }
+        const uint64_t& _RawSize() { return m_uSizeOfBuff; }
 
     public:
 
@@ -246,6 +263,10 @@ namespace SWBitmaps
 
         void MakeItNegative();
 
+        void MakeItGrayScale();
+
+        void DeleteShadows();
+
     public:
 
         // Getters ---------------------------------------------------------------------
@@ -260,17 +281,14 @@ namespace SWBitmaps
 
         void MapImage();
 
-        void PrintFirstChunk();
-
     private:
 
         std::wstring m_Path = L"";
 
-        uint64_t m_SizeOfBuff = 0;
+        uint64_t m_uSizeOfBuff = 0;
         char* m_ImageBuff = nullptr;
         
         BitmapHeader m_Header = {};
-
         PixelMapWrapper m_MappedImage = {};
     };
 }

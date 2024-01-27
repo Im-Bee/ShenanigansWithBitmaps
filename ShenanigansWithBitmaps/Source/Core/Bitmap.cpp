@@ -13,6 +13,8 @@ void Bitmap::Initialize(IN const std::wstring& path)
     m_Path = path;
 
     LoadFromPath();
+    if (!m_Header.Valid)
+        return;
     ReadHeader();
     if (!m_Header.Valid)
         return;
@@ -44,7 +46,7 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
         return;
     }
 
-    for (uint64_t i = 0; i < m_SizeOfBuff; i += BITMAP_CHUNK)
+    for (uint64_t i = 0; i < m_uSizeOfBuff; i += BITMAP_CHUNK)
         file.write((m_ImageBuff + i), BITMAP_CHUNK);
 
     file.close();
@@ -53,10 +55,10 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 // Image manipulation ----------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-#define FOR_WHOLE_IMAGE_I_K                                 \
-for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
-{                                                           \
-    for (uint64_t k = 0; k < m_MappedImage.GetWidth(i); k++) \
+#define FOR_WHOLE_IMAGE_I_K                                     \
+for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)        \
+{                                                               \
+    for (uint64_t k = 0; k < m_MappedImage.GetWidth(i); k++)    \
     {
 
 #define FOR_WHOLE_IMAGE_I_K_END }}
@@ -74,25 +76,25 @@ void Bitmap::ColorWhole(IN Color c)
         p.Green() = c.Green;
         p.Blue() = c.Blue;
     FOR_WHOLE_IMAGE_I_K_END;
-
-    m_MappedImage.Pixel(1, 2).Red() = 255;
-    m_MappedImage.Pixel(1, 2).Blue() = 255;
-    m_MappedImage.Pixel(1, 2).Green() = 255;
 }
 
 // -----------------------------------------------------------------------------
 void SWBitmaps::Bitmap::ColorHalf(IN Color c)
 {
-    FOR_WHOLE_IMAGE_I_K
-        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
-            continue;
+    for (uint64_t i = 0; i < m_MappedImage.GetHeight() / 2; i++)
+    {
+        for (uint64_t k = 0; k < m_MappedImage.GetWidth(i); k++)
+        {
+            if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
+                continue;
 
-        auto& p = m_MappedImage.Pixel(i, k);
+            auto& p = m_MappedImage.Pixel(i, k);
 
-        p.Red() = c.Red;
-        p.Green() = c.Green;
-        p.Blue() = c.Blue;
-    FOR_WHOLE_IMAGE_I_K_END
+            p.Red() = c.Red;
+            p.Green() = c.Green;
+            p.Blue() = c.Blue;
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -124,10 +126,32 @@ void Bitmap::MakeItNegative()
         
         auto& p = m_MappedImage.Pixel(i, k);
         
-        p.Red() = 256 - p.Red();
-        p.Green() = 256 - p.Green();
-        p.Blue() = 256 - p.Blue();
+        p.Red() = 255 - p.Red();
+        p.Green() = 255 - p.Green();
+        p.Blue() = 255 - p.Blue();
     FOR_WHOLE_IMAGE_I_K_END
+}
+
+// -----------------------------------------------------------------------------
+void SWBitmaps::Bitmap::MakeItGrayScale()
+{
+    FOR_WHOLE_IMAGE_I_K;
+        if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
+            continue;
+
+        auto& p = m_MappedImage.Pixel(i, k);
+        uint8_t average = (static_cast<uint32_t>(p.Red()) + p.Green() + p.Blue()) / 3;
+
+        p.Red() = average;
+        p.Green() = average;
+        p.Blue() = average;
+    FOR_WHOLE_IMAGE_I_K_END;
+}
+
+// -----------------------------------------------------------------------------
+void SWBitmaps::Bitmap::DeleteShadows()
+{
+    
 }
 
 // Private ---------------------------------------------------------------------
@@ -146,8 +170,8 @@ void Bitmap::LoadFromPath()
  
     uint64_t endOfFile = file.tellg();
 
-    m_SizeOfBuff = sizeof(char) * endOfFile;
-    m_ImageBuff = (char*) malloc(m_SizeOfBuff);
+    m_uSizeOfBuff = sizeof(char) * endOfFile;
+    m_ImageBuff = (char*) malloc(m_uSizeOfBuff);
 
     file.seekg(std::ios_base::beg);
 
@@ -161,24 +185,25 @@ void Bitmap::LoadFromPath()
 #endif // _DEBUG
 }
 
-#define CAST_READ_JUMP(loadTo, dataType, buffer, jumpVal)  \
-loadTo = *((dataType*)&buffer[jumpVal]);                        \
+#define CAST_READ_JUMP(loadTo, dataType, buffer, jumpVal)   \
+loadTo = *((dataType*)&buffer[jumpVal]);                    \
 jumpVal += sizeof(dataType);
 
 // -----------------------------------------------------------------------------
 void Bitmap::ReadHeader()
 {
-    if ((m_ImageBuff[0] != 'B' ||
-        m_ImageBuff[1] != 'M') ||
-        m_SizeOfBuff < 14)
+    if (m_ImageBuff[0] != 'B' ||
+        m_ImageBuff[1] != 'M' ||
+        m_uSizeOfBuff < 14)
         return;
-    m_Header.Valid = true;
+    else
+        m_Header.Valid = true;
 
 
     m_Header.FileSize = *((uint32_t*)(&m_ImageBuff[2]));
     m_Header.FileBeginOffset = *((uint32_t*)&m_ImageBuff[10]);
 
-    if (m_Header.FileBeginOffset == 54)
+    if (m_Header.FileBeginOffset == BITMAPINFOHEADER)
     {
         uint8_t jump = 14;
         CAST_READ_JUMP(m_Header.SizeOfHeader, uint32_t, m_ImageBuff, jump);
@@ -192,6 +217,7 @@ void Bitmap::ReadHeader()
         CAST_READ_JUMP(m_Header.VerticalResolution, int32_t, m_ImageBuff, jump);
         CAST_READ_JUMP(m_Header.ColorsInPalete, uint32_t, m_ImageBuff, jump);
         CAST_READ_JUMP(m_Header.ImportantColorsUsed, uint32_t, m_ImageBuff, jump);
+        return;
     }
 }
 
@@ -201,13 +227,13 @@ void Bitmap::MapImage()
     // Every row the countDown should be reseted to countDownNullVal
     const uint8_t countDownNullVal = -1;
     uint8_t countDown = countDownNullVal;
-
     
+    // https://en.wikipedia.org/wiki/BMP_file_format#Pixel_storage
     const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
 
     uint64_t row = 0;
     for (uint64_t i = m_Header.FileBeginOffset; 
-        i < m_SizeOfBuff; 
+        i < m_uSizeOfBuff; 
         i++, row++, countDown++)
     {
         if (row % calcWidth == 0)
@@ -216,12 +242,12 @@ void Bitmap::MapImage()
             m_MappedImage.PushBackRow();
             countDown = countDownNullVal;
         }
+
         if (countDown >= 3)
         {
             m_MappedImage.PushBackPixel();
             countDown = 0;
         }
-
         switch (countDown)
         {
         case 0:
@@ -240,15 +266,4 @@ void Bitmap::MapImage()
             throw;
         }
     }
-}
-
-// -----------------------------------------------------------------------------
-void Bitmap::PrintFirstChunk()
-{
-    std::cout << "--------------------------------------------------" << std::endl;
-    std::string s(m_ImageBuff, BITMAP_CHUNK);
-    for (size_t i = 0; i < BITMAP_CHUNK; i++)
-        std::cout << (int)s[i] << " ";
-    std::cout << std::endl;
-    std::cout << "--------------------------------------------------" << std::endl;
 }

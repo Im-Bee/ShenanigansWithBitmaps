@@ -37,12 +37,6 @@ private:
 
     void LookAtFile();
 
-    void ColorHalfOfFile();
-
-    void ColorWholeFile();
-
-    void MakeFileNegative();
-
 private:
 
     void FindPathToItself();
@@ -55,7 +49,7 @@ private:
 
     std::wstring m_PathToItself = L"";
 
-    uint32_t m_BitmapCounter = 0;
-    std::shared_ptr<SWBitmaps::Bitmap> m_LoadedBitmap = std::shared_ptr<SWBitmaps::Bitmap>(nullptr);
+    uint32_t m_uBitmapCounter = 0;
+    std::shared_ptr<SWBitmaps::Bitmap> m_pLoadedBitmap = std::shared_ptr<SWBitmaps::Bitmap>(nullptr);
 
 };
