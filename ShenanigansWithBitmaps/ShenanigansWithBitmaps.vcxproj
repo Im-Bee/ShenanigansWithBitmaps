@@ -165,7 +165,7 @@
   <ItemGroup>
     <ClInclude Include="resource2.h" />
     <ClInclude Include="Source\Core\Application.hpp" />
-    <ClInclude Include="Source\Core\BytesManipulation.hpp" />
+    <ClInclude Include="Source\Core\HexEditor.hpp" />
     <ClInclude Include="Source\Core\Bitmap.hpp" />
     <ClInclude Include="Source\EntryPoint\Win32\Entry.h" />
     <ClInclude Include="Source\Pch.h" />
@@ -174,7 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Application.cpp" />
-    <ClCompile Include="Source\Core\BytesManipulation.cpp" />
+    <ClCompile Include="Source\Core\HexEditor.cpp" />
     <ClCompile Include="Source\Core\Bitmap.cpp" />
     <ClCompile Include="Source\EntryPoint\Win32\Entry.cpp" />
     <ClCompile Include="Source\Pch.cpp" />

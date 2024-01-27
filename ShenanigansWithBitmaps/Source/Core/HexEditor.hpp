@@ -77,12 +77,12 @@ namespace SWBytesManipulation
         std::atomic_bool m_UserControlThreadSwitch = false;
         std::thread m_UserControlThread;
 
-        uint64_t m_TargetBufferSize = 0;
-        char* m_TargetBuffer = nullptr;
+        uint64_t m_uTargetBufferSize = 0;
+        char* m_pTargetBuffer = nullptr;
 
-        uint64_t m_WidthIndx = 0;
-        const uint64_t m_RowWidth = 16;
-        uint64_t m_HeightIndx = 0;
+        uint64_t m_uWidthIndx = 0;
+        const uint64_t m_uRowWidth = 16;
+        uint64_t m_uHeightIndx = 0;
 
         DisplayMode m_DisplayMode = Hex;
 

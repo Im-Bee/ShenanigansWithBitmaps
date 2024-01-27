@@ -3,7 +3,7 @@
 #include "Application.hpp"
 #include "UserInputOutput/Output.hpp"
 #include "UserInputOutput/Input.hpp"
-#include "BytesManipulation.hpp"
+#include "HexEditor.hpp"
 
 // -----------------------------------------------------------------------------
 void Application::Initialize()

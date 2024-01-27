@@ -63,7 +63,7 @@
     <ClInclude Include="Source\UserInputOutput\Input.hpp">
       <Filter>Public\UserInputOutput</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Core\BytesManipulation.hpp">
+    <ClInclude Include="Source\Core\HexEditor.hpp">
       <Filter>Public\Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -86,7 +86,7 @@
     <ClCompile Include="Source\UserInputOutput\Input.cpp">
       <Filter>Private\UserInputOutput</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Core\BytesManipulation.cpp">
+    <ClCompile Include="Source\Core\HexEditor.cpp">
       <Filter>Private\Core</Filter>
     </ClCompile>
   </ItemGroup>

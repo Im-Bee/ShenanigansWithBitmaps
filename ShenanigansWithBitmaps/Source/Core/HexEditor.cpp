@@ -1,6 +1,6 @@
 #include "Pch.h"
 
-#include "BytesManipulation.hpp"
+#include "HexEditor.hpp"
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::Start()
@@ -28,8 +28,8 @@ void SWBytesManipulation::Session::SetBuffer(IN char* target, IN const uint64_t&
     if (m_UserControlThreadSwitch.load())
         return;
 
-    m_TargetBuffer = target;
-    m_TargetBufferSize = targetSize;
+    m_pTargetBuffer = target;
+    m_uTargetBufferSize = targetSize;
 }
 
 // Private ---------------------------------------------------------------------
@@ -130,14 +130,14 @@ void SWBytesManipulation::Session::ClearScreen()
 // -----------------------------------------------------------------------------
 std::string SWBytesManipulation::Session::PrintBufferRow(IN const uint64_t& i)
 {
-    const uint64_t startingIndex = (i * m_RowWidth);
+    const uint64_t startingIndex = (i * m_uRowWidth);
 
     // Outside of buffer scope
-    if (i < 0 || startingIndex >= m_TargetBufferSize)
+    if (i < 0 || startingIndex >= m_uTargetBufferSize)
         return "";
 
     bool isSelected;
-    if (i == m_HeightIndx)
+    if (i == m_uHeightIndx)
         isSelected = true;
     else
         isSelected = false;
@@ -152,21 +152,21 @@ std::string SWBytesManipulation::Session::PrintBufferRow(IN const uint64_t& i)
         result += "    ";
 
     std::string tmp;
-    for (uint64_t i = startingIndex; i < startingIndex + m_RowWidth; i++)
+    for (uint64_t i = startingIndex; i < startingIndex + m_uRowWidth; i++)
     {
         if (isSelected &&
-            i == startingIndex + m_WidthIndx)
+            i == startingIndex + m_uWidthIndx)
             tmp = " >";
         else
             tmp = " ";
 
         if (m_DisplayMode == Hex)
-            tmp += std::format("{:2x}", (uint8_t)m_TargetBuffer[i]);
+            tmp += std::format("{:2x}", (uint8_t)m_pTargetBuffer[i]);
         else if (m_DisplayMode == Dec)
-            tmp += std::format("{:3d}", (uint8_t)m_TargetBuffer[i]);
+            tmp += std::format("{:3d}", (uint8_t)m_pTargetBuffer[i]);
 
         if (isSelected && 
-            i == startingIndex + m_WidthIndx)
+            i == startingIndex + m_uWidthIndx)
             tmp += "< ";
         else
             tmp += " ";
@@ -200,17 +200,17 @@ void SWBytesManipulation::Session::DrawOutput()
     std::string output = {};
     const uint8_t offsetUpAndDown = 14;
     uint64_t upIndex;
-    uint64_t downIndex = (m_HeightIndx + offsetUpAndDown);
+    uint64_t downIndex = (m_uHeightIndx + offsetUpAndDown);
 
     // Hacky way around
-    if (m_HeightIndx < offsetUpAndDown)
+    if (m_uHeightIndx < offsetUpAndDown)
     {
         upIndex = 0;
-        downIndex += offsetUpAndDown - m_HeightIndx;
+        downIndex += offsetUpAndDown - m_uHeightIndx;
     }
     else 
     {
-        upIndex = m_HeightIndx - offsetUpAndDown;
+        upIndex = m_uHeightIndx - offsetUpAndDown;
     }
 
     for (uint64_t& i = upIndex;
@@ -229,59 +229,59 @@ void SWBytesManipulation::Session::DrawOutput()
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::IncreaseHeight()
 {
-    if (m_HeightIndx == 0)
+    if (m_uHeightIndx == 0)
     {
-        m_HeightIndx = m_TargetBufferSize / m_RowWidth;
+        m_uHeightIndx = m_uTargetBufferSize / m_uRowWidth;
         return;
     }
 
-    m_HeightIndx--;
+    m_uHeightIndx--;
 }
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::DecreaseHeight()
 {
-    if ((m_HeightIndx + 1) * m_RowWidth >= m_TargetBufferSize)
+    if ((m_uHeightIndx + 1) * m_uRowWidth >= m_uTargetBufferSize)
     {
-        m_HeightIndx = 0;
+        m_uHeightIndx = 0;
         return;
     }
 
-    m_HeightIndx++;
+    m_uHeightIndx++;
 }
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::GoRight()
 {
-    if ((m_WidthIndx + 1) >= m_RowWidth)
+    if ((m_uWidthIndx + 1) >= m_uRowWidth)
     {
-        m_WidthIndx = 0;
+        m_uWidthIndx = 0;
         return;
     }
 
-    m_WidthIndx++;
+    m_uWidthIndx++;
 }
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::GoLeft()
 {
-    if (m_WidthIndx == 0)
+    if (m_uWidthIndx == 0)
     {
-        m_WidthIndx = m_RowWidth - 1;
+        m_uWidthIndx = m_uRowWidth - 1;
         return;
     }
 
-    m_WidthIndx--;
+    m_uWidthIndx--;
 }
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::IncreaseValue()
 {
-    m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]++;
+    m_pTargetBuffer[(m_uHeightIndx * m_uRowWidth) + m_uWidthIndx]++;
 }
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::DecreaseValue()
 {
-    m_TargetBuffer[(m_HeightIndx * m_RowWidth) + m_WidthIndx]--;
+    m_pTargetBuffer[(m_uHeightIndx * m_uRowWidth) + m_uWidthIndx]--;
 }
