@@ -107,7 +107,7 @@ void SWBytesManipulation::Session::UserControlLoop()
         }
         if (((KEY_EVENT_RECORD&)iRec.Event).uChar.AsciiChar == 'o')
         {
-            if (!m_DisplayMode)
+            if (m_DisplayMode == Hex)
                 m_DisplayMode = Dec;
             else
                 m_DisplayMode = Hex;
