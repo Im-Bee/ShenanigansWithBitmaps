@@ -14,6 +14,9 @@ void Bitmap::Initialize(IN const std::wstring& path)
 
     LoadFromPath();
     ReadHeader();
+    if (!m_Header.Valid)
+        return;
+
     MapImage();
 }
 
@@ -37,7 +40,7 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 
     if (!file.is_open())
     {
-        m_bIsValid = false;
+        m_Header.Valid = false;
         return;
     }
 
@@ -53,7 +56,7 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 #define FOR_WHOLE_IMAGE_I_K                                 \
 for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
 {                                                           \
-    for (uint64_t k = 0; k < m_MappedImage.GetWidth(); k++) \
+    for (uint64_t k = 0; k < m_MappedImage.GetWidth(i); k++) \
     {
 
 #define FOR_WHOLE_IMAGE_I_K_END }}
@@ -61,7 +64,7 @@ for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)    \
 // -----------------------------------------------------------------------------
 void Bitmap::ColorWhole(IN Color c)
 {
-    FOR_WHOLE_IMAGE_I_K
+    FOR_WHOLE_IMAGE_I_K;
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
             continue;
 
@@ -70,7 +73,11 @@ void Bitmap::ColorWhole(IN Color c)
         p.Red() = c.Red;
         p.Green() = c.Green;
         p.Blue() = c.Blue;
-    FOR_WHOLE_IMAGE_I_K_END
+    FOR_WHOLE_IMAGE_I_K_END;
+
+    m_MappedImage.Pixel(1, 2).Red() = 255;
+    m_MappedImage.Pixel(1, 2).Blue() = 255;
+    m_MappedImage.Pixel(1, 2).Green() = 255;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,7 +140,7 @@ void Bitmap::LoadFromPath()
 
     if (!file.is_open())
     {
-        m_bIsValid = false;
+        m_Header.Valid = false;
         return;
     }
  
@@ -149,22 +156,43 @@ void Bitmap::LoadFromPath()
 
     file.close();
 
-    m_bIsValid = true;
-
 #ifdef _DEBUG
     // PrintFirstChunk();
 #endif // _DEBUG
 }
 
+#define CAST_READ_JUMP(loadTo, dataType, buffer, jumpVal)  \
+loadTo = *((dataType*)&buffer[jumpVal]);                        \
+jumpVal += sizeof(dataType);
+
 // -----------------------------------------------------------------------------
 void Bitmap::ReadHeader()
 {
+    if ((m_ImageBuff[0] != 'B' ||
+        m_ImageBuff[1] != 'M') ||
+        m_SizeOfBuff < 14)
+        return;
+    m_Header.Valid = true;
 
 
+    m_Header.FileSize = *((uint32_t*)(&m_ImageBuff[2]));
+    m_Header.FileBeginOffset = *((uint32_t*)&m_ImageBuff[10]);
 
-
-    m_HeaderOffset = 56; 
-    m_HeaderOffset++;// And jump over
+    if (m_Header.FileBeginOffset == 54)
+    {
+        uint8_t jump = 14;
+        CAST_READ_JUMP(m_Header.SizeOfHeader, uint32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.Width, int32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.Height, int32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.ColorPlanes, uint16_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.ColorDepth, uint16_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.CompressionMethod, uint32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.ImageSize, uint32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.HorizontalResolution, int32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.VerticalResolution, int32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.ColorsInPalete, uint32_t, m_ImageBuff, jump);
+        CAST_READ_JUMP(m_Header.ImportantColorsUsed, uint32_t, m_ImageBuff, jump);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -174,16 +202,26 @@ void Bitmap::MapImage()
     const uint8_t countDownNullVal = -1;
     uint8_t countDown = countDownNullVal;
 
-    for (uint64_t i = m_HeaderOffset; i < m_SizeOfBuff; i++)
+    
+    const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
+
+    uint64_t row = 0;
+    for (uint64_t i = m_Header.FileBeginOffset; 
+        i < m_SizeOfBuff; 
+        i++, row++, countDown++)
     {
+        if (row % calcWidth == 0)
+        {
+            row = 0;
+            m_MappedImage.PushBackRow();
+            countDown = countDownNullVal;
+        }
         if (countDown >= 3)
         {
-            countDown = 0;
             m_MappedImage.PushBackPixel();
+            countDown = 0;
         }
 
-        // The order of colors is BGR not RGB
-        // https://pl.wikipedia.org/wiki/Windows_Bitmap (bottom of page)
         switch (countDown)
         {
         case 0:
@@ -199,10 +237,8 @@ void Bitmap::MapImage()
             break;
 
         default:
-            break;
+            throw;
         }
-        
-        countDown++;
     }
 }
 

@@ -153,6 +153,10 @@ namespace SWBitmaps
 
         MappedPixel& Pixel(size_t row, size_t col)
         {
+            if (row >= m_Map.size() ||
+                col >= m_Map[row].size())
+                throw;
+
             return m_Map[row][col];
         }
 
@@ -161,9 +165,9 @@ namespace SWBitmaps
             return m_Map[i];
         }
 
-        size_t GetWidth()
+        size_t GetWidth(size_t& i)
         {
-            return m_Map.back().size();
+            return m_Map[i].size();
         }
 
         size_t GetHeight()
@@ -175,6 +179,24 @@ namespace SWBitmaps
 
         std::vector<std::vector<MappedPixel>> m_Map;
 
+    };
+    
+    struct BitmapHeader
+    {
+        bool Valid = false;
+        uint32_t FileSize = 0;
+        uint32_t FileBeginOffset = 0;
+        uint32_t SizeOfHeader = 0;
+        int32_t Width = 0;
+        int32_t Height = 0;
+        uint16_t ColorPlanes = 0;
+        uint16_t ColorDepth = 0;
+        uint32_t CompressionMethod = 0;
+        uint32_t ImageSize = 0;
+        int32_t HorizontalResolution = 0;
+        int32_t VerticalResolution = 0;
+        uint32_t ColorsInPalete = 0;
+        uint32_t ImportantColorsUsed = 0;
     };
 
     class Bitmap
@@ -228,7 +250,7 @@ namespace SWBitmaps
 
         // Getters ---------------------------------------------------------------------
 
-        const bool& IsValid() const { return m_bIsValid; }
+        const bool& IsValid() const { return m_Header.Valid; }
 
     private:
 
@@ -244,13 +266,11 @@ namespace SWBitmaps
 
         std::wstring m_Path = L"";
 
-        bool m_bIsValid = false;
-
-        // First byte after the header
-        uint8_t m_HeaderOffset = 0;
         uint64_t m_SizeOfBuff = 0;
         char* m_ImageBuff = nullptr;
         
+        BitmapHeader m_Header = {};
+
         PixelMapWrapper m_MappedImage = {};
     };
 }

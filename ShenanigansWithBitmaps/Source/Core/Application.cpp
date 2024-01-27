@@ -37,12 +37,14 @@ void Application::Update()
         m_bQuit = true;
         return;
     }
-    if (r == L"load")
+    if (r == L"load" ||
+        r == L"l")
     {
         LoadFile();
         return;
     }
-    if (r == L"save")
+    if (r == L"save" ||
+        r == L"s")
     {
         SaveFile();
         return;
