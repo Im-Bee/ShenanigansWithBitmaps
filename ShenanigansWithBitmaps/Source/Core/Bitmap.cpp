@@ -183,6 +183,8 @@ void Bitmap::LoadFromPath()
 #ifdef _DEBUG
     // PrintFirstChunk();
 #endif // _DEBUG
+
+    m_Header.Valid = true;
 }
 
 #define CAST_READ_JUMP(loadTo, dataType, buffer, jumpVal)   \
@@ -229,7 +231,12 @@ void Bitmap::MapImage()
     uint8_t countDown = countDownNullVal;
     
     // https://en.wikipedia.org/wiki/BMP_file_format#Pixel_storage
+
+    // 'Possible loss of data' is my second name
+#pragma warning ( push )
+#pragma warning ( disable : 4244 )
     const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
+#pragma warning ( pop )
 
     uint64_t row = 0;
     for (uint64_t i = m_Header.FileBeginOffset; 

@@ -25,9 +25,9 @@ void Application::Initialize()
 // -----------------------------------------------------------------------------
 #define SW_IS_BITMAP                                        \
 if (!m_pLoadedBitmap.get() ||                               \
-    !m_pLoadedBitmap->IsValid)                              \
+    !m_pLoadedBitmap->IsValid())                            \
 {                                                           \
-    std::cout << "There is no file to save" << std::endl;   \
+    std::cout << "There is no file" << std::endl;           \
     return;                                                 \
 }
 
@@ -55,6 +55,7 @@ void Application::Update()
     if (r == L"save" ||
         r == L"s")
     {
+        
         SW_IS_BITMAP;
         SaveFile();
         return;
