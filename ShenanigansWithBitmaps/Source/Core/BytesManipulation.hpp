@@ -56,6 +56,10 @@ namespace SWBytesManipulation
 
         void DrawOutput();
 
+    private:
+
+        // User Controls -------------------------------------------------------
+
         void IncreaseHeight();
 
         void DecreaseHeight();
