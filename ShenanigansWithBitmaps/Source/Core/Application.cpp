@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------------------
 void Application::Initialize()
 {
-    SWInputOutput::OutputPrompt(IDS_STRING_PROMPT_WELCOME);
+    SWInputOutput::OutputTextFromResources(IDS_STRING_PROMPT_WELCOME);
     std::wcout << L"Availble commands\n\
         - [q] for quit\n\
         - [load / l] to load a file from path\n\
@@ -112,7 +112,7 @@ void Application::LoadFile()
     else
         m_pLoadedBitmap = std::make_shared<SWBitmaps::Bitmap>();
 
-    SWInputOutput::OutputPrompt(IDS_STRING_PROMPT_DOING_BITMAP);
+    SWInputOutput::OutputTextFromResources(IDS_STRING_PROMPT_DOING_BITMAP);
     std::wstring p = SWInputOutput::InputString(L"Set path to target bitmap:");
 
     // Remove all of '"'

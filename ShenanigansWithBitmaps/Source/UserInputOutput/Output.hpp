@@ -4,5 +4,5 @@
 
 namespace SWInputOutput
 {
-    void OutputPrompt(const int& id);
+    void OutputTextFromResources(const int& id);
 }

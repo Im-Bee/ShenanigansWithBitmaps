@@ -3,7 +3,7 @@
 #include "Output.hpp"
 
 // -----------------------------------------------------------------------------
-void SWInputOutput::OutputPrompt(const int& id)
+void SWInputOutput::OutputTextFromResources(const int& id)
 {
 #ifdef _WIN32
     wchar_t str[PROMPT_MAX_SIZE] = { 0 };
