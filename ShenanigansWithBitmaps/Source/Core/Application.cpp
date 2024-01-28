@@ -179,18 +179,18 @@ void Application::FindPathToItself()
     free(tmpFileName);
 
     return;
-#endif // DEBUG
+#endif // _WIN32
     throw;
 }
 
 // -----------------------------------------------------------------------------
 void Application::CreateSaveDir()
 {
-#ifdef _WIN64
+#ifdef _WIN32
     CreateDirectory(SAVE_DIR.c_str(), NULL);
 
     return;
-#endif // _WIN64
+#endif // _WIN32
 
     throw;
 }
