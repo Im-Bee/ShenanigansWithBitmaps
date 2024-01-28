@@ -23,7 +23,7 @@ void Application::Initialize()
 }
 
 // -----------------------------------------------------------------------------
-#define SW_IS_BITMAP                                        \
+#define SWB_IS_BITMAP                                        \
 if (!m_pLoadedBitmap.get() ||                               \
     !m_pLoadedBitmap->IsValid())                            \
 {                                                           \
@@ -56,38 +56,43 @@ void Application::Update()
         r == L"s")
     {
         
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         SaveFile();
         return;
     }
     if (r == L"lookat")
     {
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         LookAtFile();
         return;
     }
     if (r == L"color")
     {
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         m_pLoadedBitmap->ColorWhole({ 250, 170, 15 });
         return;
     }
     if (r == L"negative")
     {
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         m_pLoadedBitmap->MakeItNegative();
         return;
     }
     if (r == L"gray")
     {
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         m_pLoadedBitmap->MakeItGrayScale();
         return;
     }
-
+    if (r == L"rnbw")
+    {
+        SWB_IS_BITMAP;
+        m_pLoadedBitmap->MakeItRainbow();
+        return;
+    }
     if (r == L"ds")
     {
-        SW_IS_BITMAP;
+        SWB_IS_BITMAP;
         m_pLoadedBitmap->DeleteShadows();
         return;
     }
