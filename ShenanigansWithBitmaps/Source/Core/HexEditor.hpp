@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Bitmap.hpp"
+
 #define SWBytesManipulation_FOOTER \
 "W - up; S - down; A - left; D - right; j - decrease value; k - increase value; o - change between Hex and Dec mode"
 
@@ -40,7 +42,7 @@ namespace SWBytesManipulation
 
         // Setters -------------------------------------------------------------
         
-        void SetBuffer(IN char* target, IN const uint64_t& targetSize);
+        void SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target);
 
     private:
 
@@ -77,6 +79,7 @@ namespace SWBytesManipulation
         std::atomic_bool m_UserControlThreadSwitch = false;
         std::thread m_UserControlThread;
 
+        std::shared_ptr<SWBitmaps::Bitmap> m_pTargetBitmap = std::shared_ptr<SWBitmaps::Bitmap>(nullptr);
         uint64_t m_uTargetBufferSize = 0;
         char* m_pTargetBuffer = nullptr;
 

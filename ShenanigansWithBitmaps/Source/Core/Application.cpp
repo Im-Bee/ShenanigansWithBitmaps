@@ -23,7 +23,7 @@ void Application::Initialize()
 }
 
 // -----------------------------------------------------------------------------
-#define SWB_IS_BITMAP                                        \
+#define SWB_IS_BITMAP                                       \
 if (!m_pLoadedBitmap.get() ||                               \
     !m_pLoadedBitmap->IsValid())                            \
 {                                                           \
@@ -144,7 +144,7 @@ void Application::LookAtFile()
 {
     auto s = SWBytesManipulation::Session();
 
-    s.SetBuffer(m_pLoadedBitmap->_RawPtr(), m_pLoadedBitmap->_RawSize());
+    s.SetBuffer(m_pLoadedBitmap);
     s.Start();
     
     while (s.IsSessionAlive())

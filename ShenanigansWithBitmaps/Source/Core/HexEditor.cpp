@@ -1,6 +1,7 @@
 #include "Pch.h"
 
 #include "HexEditor.hpp"
+#include "Bitmap.hpp"
 
 // -----------------------------------------------------------------------------
 void SWBytesManipulation::Session::Start()
@@ -23,13 +24,15 @@ void SWBytesManipulation::Session::Stop()
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::SetBuffer(IN char* target, IN const uint64_t& targetSize)
+void SWBytesManipulation::Session::SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     if (m_UserControlThreadSwitch.load())
         return;
+    
+    m_pTargetBitmap = target;
 
-    m_pTargetBuffer = target;
-    m_uTargetBufferSize = targetSize;
+    m_pTargetBuffer = target->GetRawPtr();
+    m_uTargetBufferSize = target->GetRawSize();
 }
 
 // Private ---------------------------------------------------------------------

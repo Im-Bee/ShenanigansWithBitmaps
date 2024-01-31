@@ -2,6 +2,16 @@
 
 #define BITMAP_CHUNK 4096
 
+#pragma region Predeclarations
+
+namespace SWBytesManipulation
+{
+    class Session;
+}
+
+#pragma endregion
+
+
 namespace SWBitmaps
 {
     struct Color
@@ -218,6 +228,9 @@ namespace SWBitmaps
 
     class Bitmap
     {
+        
+        friend SWBytesManipulation::Session;
+
     public:
 
         Bitmap() = default;
@@ -236,10 +249,6 @@ namespace SWBitmaps
     public:
 
         void SaveToFile(IN const std::wstring& path);
-
-        char* _RawPtr() { return m_ImageBuff; }
-
-        const uint64_t& _RawSize() { return m_uSizeOfBuff; }
 
     public:
 
@@ -269,9 +278,17 @@ namespace SWBitmaps
 
     public:
 
-        // Getters ---------------------------------------------------------------------
+        // Getters -------------------------------------------------------------
 
         const bool& IsValid() const { return m_Header.Valid; }
+
+    private:
+
+        // Private, for friend class -------------------------------------------
+
+        char* GetRawPtr() { return m_ImageBuff; }
+
+        const uint64_t& GetRawSize() { return m_uSizeOfBuff; }
 
     private:
 
