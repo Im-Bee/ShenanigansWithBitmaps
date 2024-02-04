@@ -36,7 +36,7 @@ void SWBytesManipulation::Session::PrintOutFromGrayScale()
 void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     // Scale down to appropriate size
-    const uint8_t uNewWidth = 120;
+    const uint8_t uNewWidth = 90;
     const uint8_t uNewHeight = static_cast<uint8_t>(120 * ((long double)target->m_Header.Height / target->m_Header.Width));
     std::vector<int32_t> scaledDown;
 
@@ -55,7 +55,7 @@ void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBi
 
     // Print out
     std::cout << '\n';
-    const std::string colors = " .:-=+*#%@";
+    const std::string colors = " .:-=%@";
     const uint8_t indexSizeOfColors = static_cast<uint8_t>(colors.size() - 1);
     const long double min = *std::min_element(scaledDown.begin(), scaledDown.end());
     const long double max = *std::max_element(scaledDown.begin(), scaledDown.end());
