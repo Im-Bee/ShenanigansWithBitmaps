@@ -35,40 +35,53 @@ void SWBytesManipulation::Session::PrintOutFromGrayScale()
 // ----------------------------------------------------------------------------
 void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
 {
-    // Scale down to appropriate size
-    const uint8_t uNewWidth = 90;
-    const uint8_t uNewHeight = static_cast<uint8_t>(120 * ((long double)target->m_Header.Height / target->m_Header.Width));
-    std::vector<int32_t> scaledDown;
+    std::vector<uint8_t> uPixelsForConsole;
 
-    uint32_t scaledGray = 0;
+    // Scale down the image -----------
+
+    const uint8_t uNewWidth = 90;
+    // New height scaled to original aspect ratio
+    const uint8_t uNewHeight = static_cast<uint8_t>(uNewWidth * ((long double)target->m_Header.Height / target->m_Header.Width));
+
+    // Pre calculate
+    uPixelsForConsole.resize((size_t)uNewHeight * uNewWidth);
+    const long double fHeightRatio = (long double)target->m_Header.Height / uNewHeight;
+    const long double fWidthRatio = (long double)target->m_Header.Width / uNewWidth;
+ 
+    // Global index for tracking std::vector uPixelsForConsole
+    uint64_t uGlobalIndex = 0;
+    // Goes from top to bottom, 
+    // because we print in console
+    // from top to bottom
     for (int64_t i = uNewHeight - 1; i >= 0; i--)
     {
         for (int64_t k = 0; k < uNewWidth; k++)
         {
-            auto p = target->m_MappedImage.Pixel(i * target->m_Header.Height / uNewHeight, k * target->m_Header.Width / uNewWidth);
-            scaledGray = (p.Red() + p.Blue() + p.Green()) / 3;
+            auto p = target->m_MappedImage.Pixel(static_cast<size_t>(i * fHeightRatio),
+                static_cast<size_t>(k * fWidthRatio));
 
-            scaledDown.push_back(scaledGray);
+            uPixelsForConsole[uGlobalIndex++] = ((uint32_t)p.Red() + p.Blue() + p.Green()) / 3;
         }
     }
 
+    // Print out ----------------------
 
-    // Print out
-    std::cout << '\n';
-    const std::string colors = " .:-=r%@$";
-    const uint8_t indexSizeOfColors = static_cast<uint8_t>(colors.size() - 1);
-    const long double min = *std::min_element(scaledDown.begin(), scaledDown.end());
-    const long double max = *std::max_element(scaledDown.begin(), scaledDown.end());
-    uint32_t i = 1;
-    for (auto& c : scaledDown)
+    const std::string colors = " .:-=o%@$";
+    const uint8_t uIndexSizeOfColors = static_cast<uint8_t>(colors.size() - 1);
+    const long double fMin = *std::min_element(uPixelsForConsole.begin(), uPixelsForConsole.end());
+    const long double fMax = *std::max_element(uPixelsForConsole.begin(), uPixelsForConsole.end());
+    // Reused global index for tracking width of the image
+    // Starting from 1 to not add additional '\n'
+    uGlobalIndex = 1;
+    for (auto& c : uPixelsForConsole)
     {
-        uint8_t power = static_cast<uint8_t>(((c - min) / (max - min)) * indexSizeOfColors);
+        uint8_t power = static_cast<uint8_t>(((c - fMin) / (fMax - fMin)) * uIndexSizeOfColors);
         std::cout << colors[power] << " ";
         
-        if (i % uNewWidth == 0)
+        if (uGlobalIndex % uNewWidth == 0)
             std::cout << '\n';
         
-        i++;
+        uGlobalIndex++;
     }
 }
 
