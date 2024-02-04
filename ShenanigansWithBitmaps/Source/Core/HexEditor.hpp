@@ -32,6 +32,11 @@ namespace SWBytesManipulation
 
         void Stop();
 
+        void PrintOutFromGrayScale();
+
+        static void PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target);
+
+
     public:
 
         // Getters -------------------------------------------------------------

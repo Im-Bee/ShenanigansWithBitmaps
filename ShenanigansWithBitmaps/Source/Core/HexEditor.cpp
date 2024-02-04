@@ -21,6 +21,56 @@ void SWBytesManipulation::Session::Stop()
     StopUserControls();
 }
 
+// -----------------------------------------------------------------------------
+void SWBytesManipulation::Session::PrintOutFromGrayScale()
+{
+    if (!m_pTargetBitmap.get())
+    {
+        throw;
+    }
+
+    PrintOutFromGrayScale(m_pTargetBitmap);
+}
+
+// ----------------------------------------------------------------------------
+void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
+{
+    // Scale down to appropriate size
+    const uint8_t uNewWidth = 90;
+    const uint8_t uNewHeight = 100;
+    std::vector<int32_t> scaledDown;
+
+    uint32_t scaledGray = 0;
+    for (int64_t i = uNewHeight - 1; i >= 0; i--)
+    {
+        for (int64_t k = 0; k < uNewWidth; k++)
+        {
+            auto p = target->m_MappedImage.Pixel(i * target->m_Header.Height / uNewHeight, k * target->m_Header.Width / uNewWidth);
+            scaledGray = (p.Red() + p.Blue() + p.Green()) / 3;
+
+            scaledDown.push_back(scaledGray);
+        }
+    }
+
+
+    // Print out
+    std::cout << '\n';
+    const std::string colors = "@&O763lhjfsr-\\',";
+    const long double min = *std::min_element(scaledDown.begin(), scaledDown.end());
+    const long double max = *std::max_element(scaledDown.begin(), scaledDown.end());
+    uint32_t i = 0;
+    for (auto& c : scaledDown)
+    {
+        int32_t power = ((c - min) / (max - min)) * colors.size();
+        std::cout << colors[colors.size() - power] << " ";
+        
+        if (i % uNewWidth == 0)
+            std::cout << '\n';
+        
+        i++;
+    }
+}
+
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------

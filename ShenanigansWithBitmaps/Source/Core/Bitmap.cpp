@@ -55,7 +55,7 @@ void Bitmap::SaveToFile(IN const std::wstring& path)
 // Image manipulation ----------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-#define SWB_FOR_WHOLE_IMAGE_I_K                                     \
+#define SWB_FOR_WHOLE_IMAGE_I_K                                 \
 for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)        \
 {                                                               \
     for (uint64_t k = 0; k < m_MappedImage.GetWidth(i); k++)    \

@@ -96,6 +96,12 @@ void Application::Update()
         m_pLoadedBitmap->DeleteShadows();
         return;
     }
+    if (r == L"prt")
+    {
+        SWB_IS_BITMAP;
+        SWBytesManipulation::Session::PrintOutFromGrayScale(m_pLoadedBitmap);
+        return;
+    }
 
     std::wcout << L"Invalid command" << std::endl;
 }
