@@ -103,6 +103,9 @@ void SWBitmaps::Bitmap::ScaleTo(uint32_t width, uint32_t height)
             m_MappedImage.Pixel(i, k).Green() = 0 + p.Green();
         }
     }
+
+    free(originalBuf);
+    originalMap.~PixelMapWrapper();
 }
 
 // -----------------------------------------------------------------------------
