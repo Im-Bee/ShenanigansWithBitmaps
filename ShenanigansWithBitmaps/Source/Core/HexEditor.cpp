@@ -55,14 +55,15 @@ void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBi
 
     // Print out
     std::cout << '\n';
-    const std::string colors = "@&O763lhjfsr-\\',";
+    const std::string colors = "@%#*+=-:. ";
+    const uint8_t indexSizeOfColors = static_cast<uint8_t>(colors.size() - 1);
     const long double min = *std::min_element(scaledDown.begin(), scaledDown.end());
     const long double max = *std::max_element(scaledDown.begin(), scaledDown.end());
-    uint32_t i = 0;
+    uint32_t i = 1;
     for (auto& c : scaledDown)
     {
-        int32_t power = ((c - min) / (max - min)) * colors.size();
-        std::cout << colors[colors.size() - power] << " ";
+        uint8_t power = static_cast<uint8_t>(((c - min) / (max - min)) * indexSizeOfColors);
+        std::cout << colors[indexSizeOfColors - power] << " ";
         
         if (i % uNewWidth == 0)
             std::cout << '\n';
