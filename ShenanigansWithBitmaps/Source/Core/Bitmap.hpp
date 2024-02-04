@@ -129,6 +129,12 @@ namespace SWBitmaps
     {
     public:
 
+        PixelMapWrapper() = default;
+
+        ~PixelMapWrapper() = default;
+
+    public:
+
         void PushBackRow()
         {
             m_Map.push_back({});
@@ -242,6 +248,19 @@ namespace SWBitmaps
 
     public:
 
+        void operator=(const Bitmap& b)
+        {
+            m_Header = b.m_Header;
+            m_uSizeOfBuff = b.m_uSizeOfBuff;
+
+            m_ImageBuff = (char*)malloc(sizeof(char) * m_uSizeOfBuff);
+            _memccpy(m_ImageBuff, b.m_ImageBuff, sizeof(char), m_uSizeOfBuff);
+
+            m_MappedImage = b.m_MappedImage;
+        }
+
+    public:
+
         void Initialize(IN const std::wstring& path);
 
         void Destroy();
@@ -253,6 +272,8 @@ namespace SWBitmaps
     public:
 
         // Image manipulation ----------------------------------------------------------
+
+        void ScaleTo(uint32_t width, uint32_t height);
 
         void ColorWhole(IN Color c);
 
@@ -297,6 +318,8 @@ namespace SWBitmaps
         void ReadHeader();
 
         void MapImage();
+
+        void MakeHeader();
 
     private:
 

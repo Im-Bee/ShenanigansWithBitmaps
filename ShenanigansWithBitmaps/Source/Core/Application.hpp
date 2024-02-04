@@ -49,7 +49,7 @@ private:
 
     std::wstring m_PathToItself = L"";
 
-    uint32_t m_uBitmapCounter = 0;
+    uint32_t m_uBitmapCounter = 1;
     std::shared_ptr<SWBitmaps::Bitmap> m_pLoadedBitmap = std::shared_ptr<SWBitmaps::Bitmap>(nullptr);
 
 };

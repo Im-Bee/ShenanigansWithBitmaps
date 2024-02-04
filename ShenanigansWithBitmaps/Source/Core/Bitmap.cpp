@@ -64,6 +64,48 @@ for (uint64_t i = 0; i < m_MappedImage.GetHeight(); i++)        \
 #define SWB_FOR_WHOLE_IMAGE_I_K_END }}
 
 // -----------------------------------------------------------------------------
+void SWBitmaps::Bitmap::ScaleTo(uint32_t width, uint32_t height)
+{
+    char* originalBuf = m_ImageBuff;
+    PixelMapWrapper originalMap = m_MappedImage;
+    m_MappedImage.Clear();
+
+    // If no height than scale with aspect ratio
+    if (!height)
+        height = (width * ((long double)m_Header.Height / m_Header.Width));
+
+    // Pre calculate
+    const long double fNewHeightRatio = (long double)m_Header.Height / height;
+    const long double fNewWidthRatio = (long double)m_Header.Width / width;
+
+    m_Header.Width = width;
+    m_Header.Height = height;
+#pragma warning ( push )
+#pragma warning ( disable : 4244 )
+    const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
+#pragma warning ( pop )
+    m_Header.FileSize = (calcWidth * m_Header.Height) + m_Header.FileBeginOffset;
+    m_Header.ImageSize = (calcWidth * m_Header.Height);
+    m_uSizeOfBuff = sizeof(char) * m_Header.FileSize;
+    m_ImageBuff = (char*)malloc(m_uSizeOfBuff);
+    MakeHeader();
+    MapImage();
+
+    for (int64_t i = 0; i < height; i++)
+    {
+        for (int64_t k = 0; k < width; k++)
+        {
+            auto& p = originalMap.Pixel(static_cast<size_t>(i * fNewHeightRatio),
+                static_cast<size_t>(k * fNewWidthRatio));
+
+            m_MappedImage.Pixel(i, k).Red() = 0 + p.Red();
+            m_MappedImage.Pixel(i, k).Blue() = 0 + p.Blue();
+            m_MappedImage.Pixel(i, k).Green() = 0 + p.Green();
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
 void Bitmap::ColorWhole(IN Color c)
 {
     SWB_FOR_WHOLE_IMAGE_I_K;
@@ -272,5 +314,37 @@ void Bitmap::MapImage()
         default:
             throw;
         }
+    }
+}
+
+#define CAST_WRITE_JUMP(loadFrom, dataType, buffer, jumpVal)   \
+*((dataType*)&buffer[jumpVal]) = loadFrom;                     \
+jumpVal += sizeof(dataType);
+
+// -----------------------------------------------------------------------------
+void SWBitmaps::Bitmap::MakeHeader()
+{
+    m_ImageBuff[0] = 'B';
+    m_ImageBuff[1] = 'M';
+
+    *(uint32_t*)(&m_ImageBuff[2]) = m_Header.FileSize;
+    *(uint32_t*)(&m_ImageBuff[6]) = 0;
+    *(uint32_t*)(&m_ImageBuff[10]) = m_Header.FileBeginOffset;
+
+    if (m_Header.FileBeginOffset == BITMAPINFOHEADER)
+    {
+        uint8_t jump = 14;
+        CAST_WRITE_JUMP(m_Header.SizeOfHeader, uint32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.Width, int32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.Height, int32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.ColorPlanes, uint16_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.ColorDepth, uint16_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.CompressionMethod, uint32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.ImageSize, uint32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.HorizontalResolution, int32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.VerticalResolution, int32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.ColorsInPalete, uint32_t, m_ImageBuff, jump);
+        CAST_WRITE_JUMP(m_Header.ImportantColorsUsed, uint32_t, m_ImageBuff, jump);
+        return;
     }
 }

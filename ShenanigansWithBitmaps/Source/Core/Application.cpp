@@ -102,6 +102,12 @@ void Application::Update()
         SWBytesManipulation::Session::PrintOutFromGrayScale(m_pLoadedBitmap);
         return;
     }
+    if (r == L"scl")
+    {
+        SWB_IS_BITMAP;
+        m_pLoadedBitmap->ScaleTo(90, 0);
+        return;
+    }
 
     std::wcout << L"Invalid command" << std::endl;
 }
