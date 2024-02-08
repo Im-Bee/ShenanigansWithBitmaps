@@ -163,7 +163,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="resource2.h" />
     <ClInclude Include="Source\Core\Application.hpp" />
     <ClInclude Include="Source\Core\HexEditor.hpp" />
     <ClInclude Include="Source\Core\Bitmap.hpp" />
@@ -178,9 +177,6 @@
     <ClCompile Include="Source\Pch.cpp" />
     <ClCompile Include="Source\UserInputOutput\Input.cpp" />
     <ClCompile Include="Source\UserInputOutput\Output.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Prompts.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
