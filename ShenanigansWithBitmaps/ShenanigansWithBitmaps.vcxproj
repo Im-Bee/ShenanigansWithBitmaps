@@ -169,8 +169,6 @@
     <ClInclude Include="Source\Core\Bitmap.hpp" />
     <ClInclude Include="Source\EntryPoint\Win32\Entry.h" />
     <ClInclude Include="Source\Pch.h" />
-    <ClInclude Include="Source\UserInputOutput\Input.hpp" />
-    <ClInclude Include="Source\UserInputOutput\Output.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Application.cpp" />

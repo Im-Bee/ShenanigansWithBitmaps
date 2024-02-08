@@ -5,7 +5,7 @@
 #define SWBytesManipulation_FOOTER \
 "W - up; S - down; A - left; D - right; j - decrease value; k - increase value; o - change between Hex and Dec mode"
 
-namespace SWBytesManipulation
+namespace SWHexEditor
 {
     enum DisplayMode
     {
@@ -32,9 +32,9 @@ namespace SWBytesManipulation
 
         void Stop();
 
-        void PrintOutFromGrayScale();
+        void PrintImgFromGrayScale();
 
-        static void PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target);
+        static void PrintImgFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target);
 
 
     public:

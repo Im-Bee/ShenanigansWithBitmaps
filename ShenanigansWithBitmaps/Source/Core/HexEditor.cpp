@@ -4,36 +4,36 @@
 #include "Bitmap.hpp"
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::Start()
+void SWHexEditor::Session::Start()
 {
     StartUserControls();
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::UpdateSession()
+void SWHexEditor::Session::UpdateSession()
 {
     DrawOutput();
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::Stop()
+void SWHexEditor::Session::Stop()
 {
     StopUserControls();
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::PrintOutFromGrayScale()
+void SWHexEditor::Session::PrintImgFromGrayScale()
 {
     if (!m_pTargetBitmap.get())
     {
         throw;
     }
 
-    PrintOutFromGrayScale(m_pTargetBitmap);
+    PrintImgFromGrayScale(m_pTargetBitmap);
 }
 
 // ----------------------------------------------------------------------------
-void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
+void SWHexEditor::Session::PrintImgFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     std::vector<uint8_t> uPixelsForConsole;
 
@@ -88,7 +88,7 @@ void SWBytesManipulation::Session::PrintOutFromGrayScale(IN std::shared_ptr<SWBi
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target)
+void SWHexEditor::Session::SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     if (m_UserControlThreadSwitch.load())
         return;
@@ -102,18 +102,18 @@ void SWBytesManipulation::Session::SetBuffer(IN std::shared_ptr<SWBitmaps::Bitma
 // Private ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::StartUserControls()
+void SWHexEditor::Session::StartUserControls()
 {
     if (m_UserControlThreadSwitch.load())
         StopUserControls();
 
     m_UserControlThreadSwitch.store(true);
-    m_UserControlThread = std::thread(&SWBytesManipulation::Session::UserControlLoop, 
+    m_UserControlThread = std::thread(&SWHexEditor::Session::UserControlLoop, 
         this);
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::StopUserControls()
+void SWHexEditor::Session::StopUserControls()
 {
     m_UserControlThreadSwitch.store(false);
     
@@ -122,7 +122,7 @@ void SWBytesManipulation::Session::StopUserControls()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::UserControlLoop()
+void SWHexEditor::Session::UserControlLoop()
 {
     DWORD numberOfEvents;
     INPUT_RECORD iRec;
@@ -183,7 +183,7 @@ void SWBytesManipulation::Session::UserControlLoop()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::ClearScreen()
+void SWHexEditor::Session::ClearScreen()
 {
 #ifdef _WIN32
     system("cls");
@@ -195,7 +195,7 @@ void SWBytesManipulation::Session::ClearScreen()
 }
 
 // -----------------------------------------------------------------------------
-std::string SWBytesManipulation::Session::PrintBufferRow(IN const uint64_t& i)
+std::string SWHexEditor::Session::PrintBufferRow(IN const uint64_t& i)
 {
     const uint64_t startingIndex = (i * m_uRowWidth);
 
@@ -260,7 +260,7 @@ std::string SWBytesManipulation::Session::PrintBufferRow(IN const uint64_t& i)
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::DrawOutput()
+void SWHexEditor::Session::DrawOutput()
 {
     using namespace std::chrono_literals;
 
@@ -294,7 +294,7 @@ void SWBytesManipulation::Session::DrawOutput()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::IncreaseHeight()
+void SWHexEditor::Session::IncreaseHeight()
 {
     if (m_uHeightIndx == 0)
     {
@@ -306,7 +306,7 @@ void SWBytesManipulation::Session::IncreaseHeight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::DecreaseHeight()
+void SWHexEditor::Session::DecreaseHeight()
 {
     if ((m_uHeightIndx + 1) * m_uRowWidth >= m_uTargetBufferSize)
     {
@@ -318,7 +318,7 @@ void SWBytesManipulation::Session::DecreaseHeight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::GoRight()
+void SWHexEditor::Session::GoRight()
 {
     if ((m_uWidthIndx + 1) >= m_uRowWidth)
     {
@@ -330,7 +330,7 @@ void SWBytesManipulation::Session::GoRight()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::GoLeft()
+void SWHexEditor::Session::GoLeft()
 {
     if (m_uWidthIndx == 0)
     {
@@ -342,13 +342,13 @@ void SWBytesManipulation::Session::GoLeft()
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::IncreaseValue()
+void SWHexEditor::Session::IncreaseValue()
 {
     m_pTargetBuffer[(m_uHeightIndx * m_uRowWidth) + m_uWidthIndx]++;
 }
 
 // -----------------------------------------------------------------------------
-void SWBytesManipulation::Session::DecreaseValue()
+void SWHexEditor::Session::DecreaseValue()
 {
     m_pTargetBuffer[(m_uHeightIndx * m_uRowWidth) + m_uWidthIndx]--;
 }

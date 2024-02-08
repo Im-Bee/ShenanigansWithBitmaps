@@ -37,9 +37,6 @@
     <Filter Include="Private\UserInputOutput">
       <UniqueIdentifier>{e7edf702-8cc6-4d60-a2e8-92dff2183f63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Public\UserInputOutput">
-      <UniqueIdentifier>{d2df9f17-f6a6-4469-98b3-b308ea23acc1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Application.hpp">
@@ -54,14 +51,8 @@
     <ClInclude Include="Source\EntryPoint\Win32\Entry.h">
       <Filter>Public\EntryPoint\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UserInputOutput\Output.hpp">
-      <Filter>Public\UserInputOutput</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Bitmap.hpp">
       <Filter>Public\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UserInputOutput\Input.hpp">
-      <Filter>Public\UserInputOutput</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\HexEditor.hpp">
       <Filter>Public\Core</Filter>

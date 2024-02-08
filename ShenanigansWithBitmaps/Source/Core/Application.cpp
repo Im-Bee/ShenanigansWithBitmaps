@@ -1,14 +1,11 @@
 #include "Pch.h"
 
 #include "Application.hpp"
-#include "UserInputOutput/Output.hpp"
-#include "UserInputOutput/Input.hpp"
 #include "HexEditor.hpp"
 
 // -----------------------------------------------------------------------------
 void Application::Initialize()
 {
-    SWInputOutput::OutputTextFromResources(IDS_STRING_PROMPT_WELCOME);
     std::wcout << L"Availble commands\n\
         - [q] for quit\n\
         - [load / l] to load a file from path\n\
@@ -34,7 +31,9 @@ if (!m_pLoadedBitmap.get() ||                               \
 // -----------------------------------------------------------------------------
 void Application::Update()
 {
-    std::wstring r = SWInputOutput::InputString(L"... : ", true);
+    std::wstring r;
+    std::cout << "...:";
+    std::wcin >> r;
     
     // Normalize
     std::for_each(r.begin(), r.end(), [](wchar_t& c) {
@@ -99,7 +98,7 @@ void Application::Update()
     if (r == L"prt")
     {
         SWB_IS_BITMAP;
-        SWBytesManipulation::Session::PrintOutFromGrayScale(m_pLoadedBitmap);
+        SWHexEditor::Session::PrintImgFromGrayScale(m_pLoadedBitmap);
         return;
     }
     if (r == L"scl")
@@ -129,8 +128,9 @@ void Application::LoadFile()
     else
         m_pLoadedBitmap = std::make_shared<SWBitmaps::Bitmap>();
 
-    SWInputOutput::OutputTextFromResources(IDS_STRING_PROMPT_DOING_BITMAP);
-    std::wstring p = SWInputOutput::InputString(L"Set path to target bitmap:");
+    std::wstring p;
+    std::cout << "Path:";
+    std::wcin >> p;
 
     // Remove all of '"'
     while (p.find('"') != std::string::npos)
@@ -154,7 +154,7 @@ void Application::SaveFile()
 // -----------------------------------------------------------------------------
 void Application::LookAtFile()
 {
-    auto s = SWBytesManipulation::Session();
+    auto s = SWHexEditor::Session();
 
     s.SetBuffer(m_pLoadedBitmap);
     s.Start();

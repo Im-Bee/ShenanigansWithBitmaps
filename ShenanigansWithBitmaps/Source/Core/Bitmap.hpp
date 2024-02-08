@@ -4,7 +4,7 @@
 
 #pragma region Predeclarations
 
-namespace SWBytesManipulation
+namespace SWHexEditor
 {
     class Session;
 }
@@ -235,7 +235,7 @@ namespace SWBitmaps
     class Bitmap
     {
         
-        friend SWBytesManipulation::Session;
+        friend SWHexEditor::Session;
 
     public:
 
