@@ -10,10 +10,7 @@ public:
 
     Application() = default;
 
-    ~Application()
-    {
-        Destroy();
-    }
+    ~Application() = default;
 
 public:
 
@@ -48,8 +45,7 @@ private:
     bool m_bQuit = false;
 
     std::wstring m_PathToItself = L"";
-
-    uint32_t m_uBitmapCounter = 1;
+    
     std::shared_ptr<SWBitmaps::Bitmap> m_pLoadedBitmap = std::shared_ptr<SWBitmaps::Bitmap>(nullptr);
 
 };

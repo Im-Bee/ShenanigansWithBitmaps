@@ -34,7 +34,7 @@ void Application::Update()
     std::wstring r;
     std::cout << "...:";
     std::wcin >> r;
-    
+   
     // Normalize
     std::for_each(r.begin(), r.end(), [](wchar_t& c) {
         c = std::tolower(c);
@@ -108,6 +108,7 @@ void Application::Update()
         return;
     }
 
+
     std::wcout << L"Invalid command" << std::endl;
 }
 
@@ -145,9 +146,11 @@ void Application::LoadFile()
 // -----------------------------------------------------------------------------
 void Application::SaveFile()
 {
+    static int uBitmapIndexCounter = 1;
+
     m_pLoadedBitmap->SaveToFile(SAVE_DIR 
         + L"Output" 
-        + std::to_wstring(m_uBitmapCounter++) 
+        + std::to_wstring(uBitmapIndexCounter++) 
         + L".bmp");
 }
 

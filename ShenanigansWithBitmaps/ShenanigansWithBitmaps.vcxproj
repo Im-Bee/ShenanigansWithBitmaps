@@ -175,8 +175,6 @@
     <ClCompile Include="Source\Core\Bitmap.cpp" />
     <ClCompile Include="Source\EntryPoint\Win32\Entry.cpp" />
     <ClCompile Include="Source\Pch.cpp" />
-    <ClCompile Include="Source\UserInputOutput\Input.cpp" />
-    <ClCompile Include="Source\UserInputOutput\Output.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
