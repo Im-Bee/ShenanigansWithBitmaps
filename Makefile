@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ImBee/Repositories/Git/ImBee/Bitmaps/ShenanigansWithBitmaps
+CMAKE_SOURCE_DIR = /home/ImBee/Repositories/Git/Im-Bee/Public/ShenanigansWithBitmaps
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ImBee/Repositories/Git/ImBee/Bitmaps/ShenanigansWithBitmaps
+CMAKE_BINARY_DIR = /home/ImBee/Repositories/Git/Im-Bee/Public/ShenanigansWithBitmaps
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ImBee/Repositories/Git/ImBee/Bitmaps/ShenanigansWithBitmaps/CMakeFiles /home/ImBee/Repositories/Git/ImBee/Bitmaps/ShenanigansWithBitmaps//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ImBee/Repositories/Git/Im-Bee/Public/ShenanigansWithBitmaps/CMakeFiles /home/ImBee/Repositories/Git/Im-Bee/Public/ShenanigansWithBitmaps//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ImBee/Repositories/Git/ImBee/Bitmaps/ShenanigansWithBitmaps/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ImBee/Repositories/Git/Im-Bee/Public/ShenanigansWithBitmaps/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -129,101 +129,53 @@ SWB/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/build
 .PHONY : SWB/fast
 
-ShenanigansWithBitmaps/Source/Core/Application.o: ShenanigansWithBitmaps/Source/Core/Application.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.o
+Source/Core/Application.o: Source/Core/Application.cpp.o
+.PHONY : Source/Core/Application.o
 
 # target to build an object file
-ShenanigansWithBitmaps/Source/Core/Application.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Application.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.cpp.o
+Source/Core/Application.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/Core/Application.cpp.o
+.PHONY : Source/Core/Application.cpp.o
 
-ShenanigansWithBitmaps/Source/Core/Application.i: ShenanigansWithBitmaps/Source/Core/Application.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.i
+Source/Core/Application.i: Source/Core/Application.cpp.i
+.PHONY : Source/Core/Application.i
 
 # target to preprocess a source file
-ShenanigansWithBitmaps/Source/Core/Application.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Application.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.cpp.i
+Source/Core/Application.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/Core/Application.cpp.i
+.PHONY : Source/Core/Application.cpp.i
 
-ShenanigansWithBitmaps/Source/Core/Application.s: ShenanigansWithBitmaps/Source/Core/Application.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.s
+Source/Core/Application.s: Source/Core/Application.cpp.s
+.PHONY : Source/Core/Application.s
 
 # target to generate assembly for a file
-ShenanigansWithBitmaps/Source/Core/Application.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Application.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/Application.cpp.s
+Source/Core/Application.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/Core/Application.cpp.s
+.PHONY : Source/Core/Application.cpp.s
 
-ShenanigansWithBitmaps/Source/Core/Bitmap.o: ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.o
+Source/EntryPoint/Entry.o: Source/EntryPoint/Entry.cpp.o
+.PHONY : Source/EntryPoint/Entry.o
 
 # target to build an object file
-ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.o
+Source/EntryPoint/Entry.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/EntryPoint/Entry.cpp.o
+.PHONY : Source/EntryPoint/Entry.cpp.o
 
-ShenanigansWithBitmaps/Source/Core/Bitmap.i: ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.i
-
-# target to preprocess a source file
-ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.i
-
-ShenanigansWithBitmaps/Source/Core/Bitmap.s: ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.s
-
-# target to generate assembly for a file
-ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/Bitmap.cpp.s
-
-ShenanigansWithBitmaps/Source/Core/HexEditor.o: ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.o
-
-# target to build an object file
-ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.o
-
-ShenanigansWithBitmaps/Source/Core/HexEditor.i: ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.i
+Source/EntryPoint/Entry.i: Source/EntryPoint/Entry.cpp.i
+.PHONY : Source/EntryPoint/Entry.i
 
 # target to preprocess a source file
-ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.i
+Source/EntryPoint/Entry.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/EntryPoint/Entry.cpp.i
+.PHONY : Source/EntryPoint/Entry.cpp.i
 
-ShenanigansWithBitmaps/Source/Core/HexEditor.s: ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.s
-
-# target to generate assembly for a file
-ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/Core/HexEditor.cpp.s
-
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.o: ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.o
-
-# target to build an object file
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.o
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.o
-
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.i: ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.i
-
-# target to preprocess a source file
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.i
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.i
-
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.s: ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.s
+Source/EntryPoint/Entry.s: Source/EntryPoint/Entry.cpp.s
+.PHONY : Source/EntryPoint/Entry.s
 
 # target to generate assembly for a file
-ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.s
-.PHONY : ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp.s
+Source/EntryPoint/Entry.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SWB.dir/build.make CMakeFiles/SWB.dir/Source/EntryPoint/Entry.cpp.s
+.PHONY : Source/EntryPoint/Entry.cpp.s
 
 # target to build an object file
 cmake_pch.hxx.gch:
@@ -249,18 +201,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... SWB"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Application.o"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Application.i"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Application.s"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Bitmap.o"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Bitmap.i"
-	@echo "... ShenanigansWithBitmaps/Source/Core/Bitmap.s"
-	@echo "... ShenanigansWithBitmaps/Source/Core/HexEditor.o"
-	@echo "... ShenanigansWithBitmaps/Source/Core/HexEditor.i"
-	@echo "... ShenanigansWithBitmaps/Source/Core/HexEditor.s"
-	@echo "... ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.o"
-	@echo "... ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.i"
-	@echo "... ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.s"
+	@echo "... Source/Core/Application.o"
+	@echo "... Source/Core/Application.i"
+	@echo "... Source/Core/Application.s"
+	@echo "... Source/EntryPoint/Entry.o"
+	@echo "... Source/EntryPoint/Entry.i"
+	@echo "... Source/EntryPoint/Entry.s"
 	@echo "... cmake_pch.hxx.gch"
 	@echo "... cmake_pch.hxx.i"
 	@echo "... cmake_pch.hxx.s"

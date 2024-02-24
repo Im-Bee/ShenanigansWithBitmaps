@@ -7,15 +7,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Bin)
 
 
-include_directories(ShenanigansWithBitmaps/Source)
 add_executable(SWB 
-    ShenanigansWithBitmaps/Source/Core/Application.cpp 
-    ShenanigansWithBitmaps/Source/Core/Bitmap.cpp 
-    ShenanigansWithBitmaps/Source/Core/HexEditor.cpp 
-    ShenanigansWithBitmaps/Source/EntryPoint/Win32/Entry.cpp)
+    Source/Core/Application.cpp
+    Source/EntryPoint/Entry.cpp)
 
-target_precompile_headers(SWB PRIVATE ShenanigansWithBitmaps/Source/Pch.h)
-target_link_libraries(SWB lm)
+target_include_directories(SWB PRIVATE Source)
+target_precompile_headers(SWB PRIVATE Source/Pch.h)
 
 set_property(TARGET SWB PROPERTY CXX_STANDARD 26)
 
