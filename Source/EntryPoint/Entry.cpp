@@ -1,9 +1,11 @@
-#include "PCH.h"
+#include "Pch.h"
 #include "Core/Application.hpp"
 
 int main()
 {
-    std::wcout << L"Witam";
+    auto app = new LOL::Application();
+
+    app->Initialize();
 
     return 0;
 }
