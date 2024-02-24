@@ -20,7 +20,7 @@ namespace SWBitmaps
         uint8_t Green = 0;
         uint8_t Blue = 0;
 
-        uint8_t& operator[](IN const uint8_t& i)
+        uint8_t& operator[](const uint8_t& i)
         {
             switch (i)
             {
@@ -52,7 +52,7 @@ namespace SWBitmaps
 
         MappedPixel() = default;
 
-        MappedPixel(IN uint8_t* r, IN uint8_t* g, IN uint8_t* b) :
+        MappedPixel(uint8_t* r, uint8_t* g, uint8_t* b) :
             m_pRed(r),
             m_pGreen(g),
             m_pBlue(b)
@@ -72,17 +72,17 @@ namespace SWBitmaps
 
         // Setters -------------------------------------------------------------
 
-        void SetRedRef(IN uint8_t& r) { m_pRed = &r; }
+        void SetRedRef(uint8_t& r) { m_pRed = &r; }
 
-        void SetGreenRef(IN uint8_t& g) { m_pGreen = &g; }
+        void SetGreenRef(uint8_t& g) { m_pGreen = &g; }
 
-        void SetBlueRef(IN uint8_t& b) { m_pBlue = &b; }
+        void SetBlueRef(uint8_t& b) { m_pBlue = &b; }
 
     public:
 
         // Operators -----------------------------------------------------------
 
-        static bool IsEmpty(IN const MappedPixel& mp)
+        static bool IsEmpty(const MappedPixel& mp)
         {
             if (mp.m_pRed == nullptr &&
                 mp.m_pGreen == nullptr &&
@@ -92,7 +92,7 @@ namespace SWBitmaps
             return false;
         }
 
-        static bool IsInvalid(IN const MappedPixel& mp)
+        static bool IsInvalid(const MappedPixel& mp)
         {
             if (mp.m_pRed == nullptr ||
                 mp.m_pGreen == nullptr ||
@@ -102,7 +102,7 @@ namespace SWBitmaps
             return false;
         }
 
-        bool operator==(IN const MappedPixel& right)
+        bool operator==(const MappedPixel& right)
         {
             if (m_pRed == right.m_pRed &&
                 m_pGreen == right.m_pGreen &&
@@ -148,7 +148,7 @@ namespace SWBitmaps
             m_Map.back().push_back(MappedPixel());
         }
 
-        void PushBackPixel(IN const size_t& i)
+        void PushBackPixel(const size_t& i)
         {
             SW_THROW_IF_I_OUT_OF_SCOPE(i);
 
@@ -164,7 +164,7 @@ namespace SWBitmaps
 
         // Getters ---------------------------------------------------------------------
 
-        std::vector<MappedPixel>& Row(IN const size_t& i)
+        std::vector<MappedPixel>& Row(const size_t& i)
         {
             SW_THROW_IF_I_OUT_OF_SCOPE(i);
 
@@ -176,7 +176,7 @@ namespace SWBitmaps
             return m_Map.back().back();
         }
 
-        MappedPixel& Pixel(IN const size_t& row, IN const size_t& col)
+        MappedPixel& Pixel(const size_t& row, const size_t& col)
         {
             SW_THROW_IF_I_OUT_OF_SCOPE(row);
             if (col >= m_Map[row].size())
@@ -185,14 +185,14 @@ namespace SWBitmaps
             return m_Map[row][col];
         }
 
-        std::vector<MappedPixel>& operator[](IN const size_t& i)
+        std::vector<MappedPixel>& operator[](const size_t& i)
         {
             SW_THROW_IF_I_OUT_OF_SCOPE(i);
 
             return m_Map[i];
         }
 
-        size_t GetWidth(IN const size_t& i)
+        size_t GetWidth(const size_t& i)
         {
             SW_THROW_IF_I_OUT_OF_SCOPE(i);
 
@@ -254,20 +254,19 @@ namespace SWBitmaps
             m_uSizeOfBuff = b.m_uSizeOfBuff;
 
             m_ImageBuff = (char*)malloc(sizeof(char) * m_uSizeOfBuff);
-            _memccpy(m_ImageBuff, b.m_ImageBuff, sizeof(char), m_uSizeOfBuff);
-
+            memcpy(m_ImageBuff, b.m_ImageBuff, m_uSizeOfBuff);
             m_MappedImage = b.m_MappedImage;
         }
 
     public:
 
-        void Initialize(IN const std::wstring& path);
+        void Initialize(const std::wstring& path);
 
         void Destroy();
 
     public:
 
-        void SaveToFile(IN const std::wstring& path);
+        void SaveToFile(const std::wstring& path);
 
     public:
 
@@ -275,9 +274,9 @@ namespace SWBitmaps
 
         void ScaleTo(uint32_t width, uint32_t height);
 
-        void ColorWhole(IN Color c);
+        void ColorWhole(Color c);
 
-        void ColorHalf(IN Color c);
+        void ColorHalf(Color c);
 
         void MakeItBlack()
         {

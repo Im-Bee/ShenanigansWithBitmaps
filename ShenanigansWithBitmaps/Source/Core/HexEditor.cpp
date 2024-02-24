@@ -1,4 +1,4 @@
-#include "Pch.h"
+#include "../Pch.h"
 
 #include "HexEditor.hpp"
 #include "Bitmap.hpp"
@@ -33,7 +33,7 @@ void SWHexEditor::Session::PrintImgFromGrayScale()
 }
 
 // ----------------------------------------------------------------------------
-void SWHexEditor::Session::PrintImgFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target)
+void SWHexEditor::Session::PrintImgFromGrayScale(std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     std::vector<uint8_t> uPixelsForConsole;
 
@@ -88,7 +88,7 @@ void SWHexEditor::Session::PrintImgFromGrayScale(IN std::shared_ptr<SWBitmaps::B
 // Setters ---------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void SWHexEditor::Session::SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target)
+void SWHexEditor::Session::SetBuffer(std::shared_ptr<SWBitmaps::Bitmap> target)
 {
     if (m_UserControlThreadSwitch.load())
         return;
@@ -124,6 +124,7 @@ void SWHexEditor::Session::StopUserControls()
 // -----------------------------------------------------------------------------
 void SWHexEditor::Session::UserControlLoop()
 {
+#ifdef _WIN32
     DWORD numberOfEvents;
     INPUT_RECORD iRec;
     HANDLE console = GetStdHandle(STD_INPUT_HANDLE);
@@ -180,6 +181,7 @@ void SWHexEditor::Session::UserControlLoop()
                 m_DisplayMode = Hex;
         }
     }
+#endif // _WIN32
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +197,7 @@ void SWHexEditor::Session::ClearScreen()
 }
 
 // -----------------------------------------------------------------------------
-std::string SWHexEditor::Session::PrintBufferRow(IN const uint64_t& i)
+std::string SWHexEditor::Session::PrintBufferRow(const uint64_t& i)
 {
     const uint64_t startingIndex = (i * m_uRowWidth);
 

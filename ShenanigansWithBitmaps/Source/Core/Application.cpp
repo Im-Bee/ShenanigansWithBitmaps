@@ -1,7 +1,8 @@
-#include "Pch.h"
+#include "../Pch.h"
 
 #include "Application.hpp"
 #include "HexEditor.hpp"
+#include <string>
 
 // -----------------------------------------------------------------------------
 void Application::Initialize()
@@ -148,10 +149,15 @@ void Application::SaveFile()
 {
     static int uBitmapIndexCounter = 1;
 
+#ifdef _WIN32
     m_pLoadedBitmap->SaveToFile(SAVE_DIR 
         + L"Output" 
         + std::to_wstring(uBitmapIndexCounter++) 
         + L".bmp");
+#else
+    m_pLoadedBitmap->SaveToFile(L"Output" + std::to_wstring(uBitmapIndexCounter) + L".bmp");
+#endif // _WIN32
+
 }
 
 // -----------------------------------------------------------------------------
@@ -200,7 +206,6 @@ void Application::FindPathToItself()
 
     return;
 #endif // _WIN32
-    throw;
 }
 
 // -----------------------------------------------------------------------------
@@ -211,6 +216,4 @@ void Application::CreateSaveDir()
 
     return;
 #endif // _WIN32
-
-    throw;
 }

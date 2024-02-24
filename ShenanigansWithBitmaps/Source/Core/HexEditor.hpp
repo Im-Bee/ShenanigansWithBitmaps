@@ -34,7 +34,7 @@ namespace SWHexEditor
 
         void PrintImgFromGrayScale();
 
-        static void PrintImgFromGrayScale(IN std::shared_ptr<SWBitmaps::Bitmap> target);
+        static void PrintImgFromGrayScale(std::shared_ptr<SWBitmaps::Bitmap> target);
 
 
     public:
@@ -47,7 +47,7 @@ namespace SWHexEditor
 
         // Setters -------------------------------------------------------------
         
-        void SetBuffer(IN std::shared_ptr<SWBitmaps::Bitmap> target);
+        void SetBuffer(std::shared_ptr<SWBitmaps::Bitmap> target);
 
     private:
 
@@ -59,7 +59,7 @@ namespace SWHexEditor
 
         void ClearScreen();
 
-        std::string PrintBufferRow(IN const uint64_t& i);
+        std::string PrintBufferRow(const uint64_t& i);
 
         void DrawOutput();
 

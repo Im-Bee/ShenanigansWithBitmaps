@@ -1,6 +1,8 @@
-#include "Pch.h"
+#include "../Pch.h"
 
 #include "Bitmap.hpp"
+
+#include <fstream>
 
 using namespace SWBitmaps;
 
@@ -8,7 +10,7 @@ using namespace SWBitmaps;
 // Bitmap ----------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-void Bitmap::Initialize(IN const std::wstring& path)
+void Bitmap::Initialize(const std::wstring& path)
 {
     m_Path = path;
 
@@ -35,9 +37,9 @@ void Bitmap::Destroy()
 }
 
 // -----------------------------------------------------------------------------
-void Bitmap::SaveToFile(IN const std::wstring& path)
+void Bitmap::SaveToFile(const std::wstring& path)
 {
-    std::ofstream file(path,
+    std::ofstream file(std::string(path.begin(), path.end()),
         std::ios_base::binary | std::ios_base::out);
 
     if (!file.is_open())
@@ -82,7 +84,7 @@ void SWBitmaps::Bitmap::ScaleTo(uint32_t width, uint32_t height)
     m_Header.Height = height;
 #pragma warning ( push )
 #pragma warning ( disable : 4244 )
-    const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
+    const uint64_t calcWidth = std::floor((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
 #pragma warning ( pop )
     m_Header.FileSize = (calcWidth * m_Header.Height) + m_Header.FileBeginOffset;
     m_Header.ImageSize = (calcWidth * m_Header.Height);
@@ -109,7 +111,7 @@ void SWBitmaps::Bitmap::ScaleTo(uint32_t width, uint32_t height)
 }
 
 // -----------------------------------------------------------------------------
-void Bitmap::ColorWhole(IN Color c)
+void Bitmap::ColorWhole(Color c)
 {
     SWB_FOR_WHOLE_IMAGE_I_K;
         if (MappedPixel::IsInvalid(m_MappedImage.Pixel(i, k)))
@@ -124,7 +126,7 @@ void Bitmap::ColorWhole(IN Color c)
 }
 
 // -----------------------------------------------------------------------------
-void SWBitmaps::Bitmap::ColorHalf(IN Color c)
+void SWBitmaps::Bitmap::ColorHalf(Color c)
 {
     for (uint64_t i = 0; i < m_MappedImage.GetHeight() / 2; i++)
     {
@@ -204,7 +206,7 @@ void SWBitmaps::Bitmap::DeleteShadows()
 // -----------------------------------------------------------------------------
 void Bitmap::LoadFromPath()
 {
-    std::ifstream file(m_Path,
+    std::ifstream file(std::string(m_Path.begin(), m_Path.end()),
         std::ios_base::binary | std::ios_base::in | std::ios_base::ate);
 
     if (!file.is_open())
@@ -278,10 +280,7 @@ void Bitmap::MapImage()
     // https://en.wikipedia.org/wiki/BMP_file_format#Pixel_storage
 
     // 'Possible loss of data' is my second name
-#pragma warning ( push )
-#pragma warning ( disable : 4244 )
     const uint64_t calcWidth = std::floorl((((m_Header.ColorDepth * m_Header.Width) + 31) / 32)) * 4;
-#pragma warning ( pop )
 
     uint64_t row = 0;
     for (uint64_t i = m_Header.FileBeginOffset; 

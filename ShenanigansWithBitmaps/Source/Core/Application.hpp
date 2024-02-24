@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Bitmap.hpp"
+#include "../Core/Bitmap.hpp"
 
 #define SAVE_DIR (m_PathToItself.substr(0, m_PathToItself.size() - 1) + L"\\Output\\")
 

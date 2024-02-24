@@ -10,3 +10,11 @@
 /Bin64/Release/ShenanigansWithBitmaps
 /Bin64/Debug/LUL_Profiler
 /Obj64/Debug/LUL_Profiler
+
+/Bin
+/CMakeFiles
+/CMakeCache.txt
+/compile_commands.json
+/.cache
+/cmake_install.cmake
+/.cmake
